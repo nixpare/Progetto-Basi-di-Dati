@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+	--primary-segr-color: hsl(20 100% 50%);
+	--primary-segr-color-light: hsl(20 100% 85%);
+	--primary-segr-color-dark: hsl(0 90% 45%);
+
+	--primary-doc-color: hsl(150 80% 50%);
+	--primary-doc-color-light: hsl(150 75% 80%);
+	--primary-doc-color-dark: hsl(150 80% 35%);
+
+	--primary-stud-color: hsl(200 100% 50%);
+	--primary-stud-color-light: hsl(200 100% 85%);
+	--primary-stud-color-dark: hsl(220 80% 50%);
+
+	--text-color: #555;
+}
+
+body.segr {
+	--primary-color: var(--primary-segr-color);
+	--primary-color-dark: var(--primary-segr-color-dark);
+	--primary-color-light: var(--primary-segr-color-light);
+}
+
+body.doc {
+	--primary-color: var(--primary-doc-color);
+	--primary-color-dark: var(--primary-doc-color-dark);
+	--primary-color-light: var(--primary-doc-color-light);
+}
+
+body.stud {
+	--primary-color: var(--primary-stud-color);
+	--primary-color-dark: var(--primary-stud-color-dark);
+	--primary-color-light: var(--primary-stud-color-light);
+}
+
+* {
+	font-family: 'Prompt', sans-serif;
+	transition-property: color, background-color, border-radius;
+	transition-duration: .3s;
+}
+
+header {
+	border-bottom: 1px solid #ccc;
+}
+
+header h1 {
+	font-size: 2rem;
+	margin-bottom: 0;
+}
+
+header h1 {
+	color: var(--primary-color-dark);
+}
+
+p {
+	color: var(--text-color);
+}
+
+button {
+	padding: .6em 1.2em;
+	border: 0;
+	border-radius: .8em;
+	background-color: var(--primary-color);
+}
+
+button:disabled {
+	background-color: var(--primary-color-light);
+	border: 1px solid var(--primary-color);
+}
+
+input {
+	margin: .5em 1em;
+	padding: .3em 1em;
+	background-color: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--primary-color-dark);
+}
+
+input:focus {
+	outline: none;
+}
+
+.password-container {
+	position: relative;
+}
+
+.password-container input {
+	position: relative;
+	padding-right: 2.4em;
+}
+
+.password-container i {
+	position: absolute;
+	top: calc(50% - .5em);
+	bottom: calc(50% - .5em);
+	right: 1.2em;
+	width: 1em;
+	height: 1em;
+}
+
+.welcome h2 {
+	color: var(--primary-color);
+}
+
+table {
+	--b-radius: .6em;
+}
+
+th {
+	background-color: var(--primary-color-light);
+}
+
+tbody {
+	background-color: #eee;
+}
+
+tr:not(:nth-child(1)) {
+	position: relative;
+}
+
+tr:not(:nth-child(1)):not(.spacer):not(.tr-no-delim)::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--b-radius);
+	right: var(--b-radius);
+	height: 1px;
+	background-color: #ccc;
+}
+
+tr.spacer td {
+	padding: .1em 0;
+	background-color: var(--bs-body-bg);
+}
+
+th, td {
+	padding: .8em 1.4em;
+}
+
+tr:first-child td:first-child, th:first-child {
+	border-top-left-radius: var(--b-radius);
+}
+tr:first-child td:last-child, th:last-child {
+	border-top-right-radius: var(--b-radius);
+}
+tr:last-child td:first-child, th:first-child {
+	border-bottom-left-radius: var(--b-radius);
+}
+tr:last-child td:last-child, th:last-child {
+	border-bottom-right-radius: var(--b-radius);
+}
+
+table tr:not(.spacer) th:not(:nth-child(1)), table tr:not(.spacer) td:not(:nth-child(1)) {
+	position: relative;
+}
+
+table tr:not(.spacer) th:not(:nth-child(1))::after, table tr:not(.spacer):not(.tr-no-delim) td:not(:nth-child(1))::after {
+	content: '';
+	position: absolute;
+	top: calc(var(--b-radius) - .1em);
+	bottom: calc(var(--b-radius) - .1em);
+	left: 0;
+	width: 1px;
+	background-color: #ccc;
+}
+
+table tr.spacer + tr td:last-child {
+	border-top-right-radius: var(--b-radius);
+	border-bottom-right-radius: var(--b-radius);
+}

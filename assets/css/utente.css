@@ -1,0 +1,10 @@
+.welcome.welcome-user {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+}
+
+.welcome.welcome-user img {
+	width: 6em;
+}

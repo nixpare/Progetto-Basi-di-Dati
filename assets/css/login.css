@@ -1,0 +1,86 @@
+div.container.login {
+	font-size: 1.1em;
+	--form-background: var(--primary-color-light);
+	--form-border-radius: 1em;
+	background-color: var(--form-background);
+	width: fit-content;
+	border-radius: var(--form-border-radius);
+}
+
+.login .user-btns-container {
+	--buttons-background: #eee;
+	background-color: var(--buttons-background);
+	border-top-left-radius: var(--form-border-radius);
+	border-top-right-radius: var(--form-border-radius);
+}
+
+.login .user-btn {
+	padding: 1em 3em;
+	border: 0;
+	background-color: var(--buttons-background);
+	z-index: 200;
+}
+
+.login .user-btn:nth-child(1) {
+	color: var(--primary-segr-color);
+	--animation-color: var(--primary-segr-color-dark);
+	border-radius: var(--form-border-radius) 0 var(--form-border-radius) 0;
+}
+.login .user-btn:nth-child(2) {
+	color: var(--primary-doc-color);
+	--animation-color: var(--primary-doc-color-dark);
+	border-radius: 0 0 var(--form-border-radius) var(--form-border-radius);
+}
+.login .user-btn:nth-child(3) {
+	color: var(--primary-stud-color);
+	--animation-color: var(--primary-stud-color-dark);
+	border-radius: 0 var(--form-border-radius) 0 var(--form-border-radius);
+}
+
+.login .user-btn[disabled] {
+	background-color: var(--form-background);
+	color: var(--primary-color-dark);
+	border-radius: var(--form-border-radius) var(--form-border-radius) 0 0;
+	position: relative;
+	z-index: 100;
+}
+
+.login .user-btn[disabled]::before, .login .user-btn[disabled]::after {
+	position: absolute;
+	width: var(--form-border-radius);
+	height: var(--form-border-radius);
+	background-color: var(--form-background);
+	bottom: 0;
+}
+
+.login .user-btn[disabled]:nth-child(1)::after {
+	content: '';
+	right: calc(var(--form-border-radius) * -1);
+}
+
+.login .user-btn[disabled]:nth-child(2)::before {
+	content: '';
+	left: calc(var(--form-border-radius) * -1);
+}
+.login .user-btn[disabled]:nth-child(2)::after {
+	content: '';
+	right: calc(var(--form-border-radius) * -1);
+}
+
+.login .user-btn[disabled]:nth-child(3)::after {
+	content: '';
+	left: calc(var(--form-border-radius) * -1);
+}
+
+.login fieldset {
+	width: fit-content;
+	margin: auto;
+}
+
+.login fieldset input {
+	min-width: 30ch;
+}
+
+.login button[type="submit"] {
+	align-self: end;
+}
