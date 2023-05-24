@@ -8,3 +8,26 @@
 .welcome.welcome-user img {
 	width: 6em;
 }
+
+.study-plan h5 {
+	margin-bottom: 0;
+}
+
+.collapse-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* width: 1.6em;
+	height: 1.6em; */
+	padding: .4em;
+	border-radius: 50%;
+	background-color: transparent;
+}
+
+.collapse-btn * {
+	pointer-events: none;
+}
+
+.collapse-btn i {
+	color: var(--primary-color-dark);
+}

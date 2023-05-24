@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="stylesheet" href="/assets/css/utente.css">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
+	<script src="/assets/js/utente.js" defer></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body class="stud">
@@ -29,31 +30,144 @@
 		<div>
 			<table>
 				<tr class="spacer"><td></td></tr>
-				<tr class="tr-no-delim">
+				<tr>
 					<th>Email</th>
 					<td>giovanni.giorgio@studenti.unimi.it</td>
 					<td></td>
 				</tr>
 				<tr class="spacer"><td></td></tr>
-				<tr class="tr-no-delim">
+				<tr>
 					<th>N° Matricola</th>
 					<td>951175</td>
 					<td></td>
 				</tr>
 				<tr class="spacer"><td></td></tr>
-				<tr class="tr-no-delim">
+				<tr>
 					<th>Cellurare</th>
 					<td>+39 3801877247</td>
 					<td><button>Edit</button></td>
 				</tr>
 				<tr class="spacer"><td></td></tr>
-				<tr class="tr-no-delim">
+				<tr>
 					<th>Indirizzo</th>
-					<td>Via Boh, Da qualche parte a Lodi</td>
+					<td>Via Boh, Da qualche parte a Fontana</td>
 					<td><button>Edit</button></td>
 				</tr>
 			</table>
 		</div>
 	</div>
+	
+	<div class="container study-plan">
+		<h4>Piano di studi</h4>
+		<table>
+			<tr>
+				<th>Corso di Laurea</th>
+				<td>Informatica</td>
+				<td>Triennale</td>
+			</tr>
+		</table>
+		<div id="study-accordion">
+			<div class="my-4">
+				<div class="d-flex align-items-center">
+					<button class="collapse-btn" data-bs-toggle="collapse" data-bs-target="#firstYearPlan" aria-expanded="false" aria-controls="firstYearPlan">
+						<i class="me-2 fa-solid fa-chevron-right"></i>
+						<h5>Primo anno</h5>
+					</button>
+				</div>
+				<div class="container my-2 accordion-collapse collapse" id="firstYearPlan" data-bs-parent="#study-accordion">
+					<table>
+						<thead>
+							<tr>
+								<th>Insegnamento</th>
+								<th>Responsabile</th>
+								<th></th>
+							</tr>
+							<tr class="spacer"><th></th></tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Programmazione I</td>
+								<td>Boldi</td>
+								<td><button>Appelli</button></td>
+							</tr>
+							<tr>
+								<td>Architettura I</td>
+								<td>Basilico</td>
+								<td><button>Appelli</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="my-4">
+				<div class="d-flex align-items-center">
+					<button class="collapse-btn" data-bs-toggle="collapse" data-bs-target="#secondYearPlan" aria-expanded="false" aria-controls="secondYearPlan">
+						<i class="me-2 fa-solid fa-chevron-right"></i>
+						<h5>Secondo anno</h5>
+					</button>
+				</div>
+				<div class="container my-2 accordion-collapse collapse" id="secondYearPlan" data-bs-parent="#study-accordion">
+					<table>
+						<thead>
+							<tr>
+								<th>Insegnamento</th>
+								<th>Responsabile</th>
+								<th></th>
+							</tr>
+							<tr class="spacer"><th></th></tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Programmazione II</td>
+								<td>Santini</td>
+								<td><button>Appelli</button></td>
+							</tr>
+							<tr>
+								<td>Basi di Dati</td>
+								<td>Montanelli</td>
+								<td><button>Appelli</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="my-4">
+				<div class="d-flex align-items-center">
+					<button class="collapse-btn" data-bs-toggle="collapse" data-bs-target="#thirdYearPlan" aria-expanded="false" aria-controls="thirdYearPlan">
+						<i class="me-2 fa-solid fa-chevron-right"></i>
+						<h5>Terzo anno</h5>
+					</button>
+				</div>
+				<div class="container my-2 accordion-collapse collapse" id="thirdYearPlan" data-bs-parent="#study-accordion">
+					<table>
+						<thead>
+							<tr>
+								<th>Insegnamento</th>
+								<th>Responsabile</th>
+								<th></th>
+							</tr>
+							<tr class="spacer"><th></th></tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Ingegneria del Software</td>
+								<td>Bellettini</td>
+								<td><button>Appelli</button></td>
+							</tr>
+							<tr>
+								<td>Reti di Calcolatori</td>
+								<td>Rossi</td>
+								<td><button>Appelli</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+		<p>Designed by <a href="https://nixpare.com/">NixPare</a></p>
+	</footer>
 </body>
 </html>

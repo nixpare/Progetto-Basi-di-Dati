@@ -36,7 +36,7 @@ body.stud {
 
 * {
 	font-family: 'Prompt', sans-serif;
-	transition-property: color, background-color, border-radius;
+	transition-property: color, background-color, border-radius, transform;
 	transition-duration: .3s;
 }
 
@@ -129,7 +129,11 @@ tr:not(:nth-child(1)):not(.spacer):not(.tr-no-delim)::after {
 	background-color: #ccc;
 }
 
-tr.spacer td {
+tr:is(tr.spacer + tr)::after {
+	height: 0 !important;
+}
+
+tr.spacer th, tr.spacer td {
 	padding: .1em 0;
 	background-color: var(--bs-body-bg);
 }
@@ -151,11 +155,11 @@ tr:last-child td:last-child, th:last-child {
 	border-bottom-right-radius: var(--b-radius);
 }
 
-table tr:not(.spacer) th:not(:nth-child(1)), table tr:not(.spacer) td:not(:nth-child(1)) {
+tr:not(.spacer) th:not(:nth-child(1)), tr:not(.spacer) td:not(:nth-child(1)) {
 	position: relative;
 }
 
-table tr:not(.spacer) th:not(:nth-child(1))::after, table tr:not(.spacer):not(.tr-no-delim) td:not(:nth-child(1))::after {
+tr:not(.spacer) th:not(:nth-child(1))::after, tr:not(.spacer):not(.tr-no-delim) td:not(:nth-child(1))::after {
 	content: '';
 	position: absolute;
 	top: calc(var(--b-radius) - .1em);
@@ -165,7 +169,34 @@ table tr:not(.spacer) th:not(:nth-child(1))::after, table tr:not(.spacer):not(.t
 	background-color: #ccc;
 }
 
-table tr.spacer + tr td:last-child {
+td:is(th + td)::after {
+	width: 0 !important;
+}
+
+tr.spacer + tr td:last-child {
 	border-top-right-radius: var(--b-radius);
 	border-bottom-right-radius: var(--b-radius);
+}
+
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 2em;
+	padding: 2em;
+	background-color: #555;
+}
+
+footer p {
+	margin-bottom: 0;
+	color: #eee;
+}
+
+footer p a {
+	margin-left: .2em;
+	padding: .3em .5em;
+	color: #555;
+	background-color: #eee;
+	border-radius: .2em;
+	text-decoration: none;
 }
