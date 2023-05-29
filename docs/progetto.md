@@ -49,21 +49,17 @@ Il campo `tipo` di Appello può assumere i valori *scritto* e *orale*
 **studente**(<u>matricola</u>, email, password, nome, cognome, *corso*) \
 corso -> corso_di_laurea(nome)
 
-**insegnamento**(<u>codice, *corso*</u>, anno, descrizione, *docente*) \
+**insegnamento**(<u>codice, *corso*</u>, anno, descrizione, *responsabile*) \
 corso -> corso_di_laurea(nome) \
-docente -> docente(email)
+responsabile -> docente(email)
 
 **propedeuticità**(<u>*codice_insegnamento*, *corso_insegnamento*, *codice_propedeutico*, *corso_propedeutico*</u>) \
-codice_insegnamento, codice_propedeutico -> insegnamento(codice)
-corso_insegnamento, corso_propedeutico -> insegnamento(corso)
+(codice_insegnamento, corso_insegnamento) -> insegnamento(codice, corso) \
+(codice_propedeutico, corso_propedeutico) -> insegnamento(codice, corso)
 
-**appello**(<u>data, *insegnamento*, *corso*</u>, tipo, *docente*) \
-insegnamento -> insegnamento(codice) \
-corso -> insegnamento(corso) \
-docente -> docente(email)
+**appello**(<u>data, *insegnamento*, *corso*</u>, tipo) \
+(insegnamento, corso) -> insegnamento(codice, corso)
 
-**sostiene**(<u>data, *insegnamento*, *corso*, *studente*</u>, \*voto) \
-data -> appello(data) \
-insegnamento -> appello(insegnamento) \
-corso -> appello(corso) \
-studente -> studente(matricola)
+**sostiene**(<u>*studente*, *data*, *insegnamento*, *corso*</u>, *voto) \
+studente -> studente(matricola) \
+(data, insegnamento, corso) -> appello(data, insegnamento, corso)
