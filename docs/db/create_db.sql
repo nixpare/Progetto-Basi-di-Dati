@@ -33,26 +33,27 @@ create table studente (
 create or replace function check_email_unique_i_u_f()
     returns trigger
 language plpgsql as $$
-    declare
-        new_email email;
     begin
         NEW.email := trim(lower(NEW.email));
 
         -- check for segretario
         perform * from uni.segretario where trim(lower(email)) = NEW.email;
         if (FOUND) then
+            raise 'Email "%" già usata da un segretario', NEW.email;
             return NULL;
         end if;
 
         -- check for docente
         perform * from uni.docente where trim(lower(email)) = NEW.email;
         if (FOUND) then
+            raise 'Email "%" già usata da un docente', NEW.email;
             return NULL;
         end if;
 
         -- check for studente
         perform * from uni.studente where trim(lower(email)) = NEW.email;
         if (FOUND) then
+            raise 'Email "%" già usata da uno studente', NEW.email;
             return NULL;
         end if;
 
