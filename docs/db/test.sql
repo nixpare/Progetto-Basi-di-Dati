@@ -27,3 +27,7 @@ insert into uni.docente values
     ('utente3@unimi.it', 'password', 'Nome', 'Cognome'); -- fail
 insert into uni.studente values
     ('654321', 'utente1@unimi.it', 'password', 'Nome', 'Cognome'); -- fail
+
+delete from uni.segretario where email = 'utente1@unimi.it';
+delete from uni.docente where email = 'utente2@unimi.it';
+delete from uni.studente where email = 'utente3@unimi.it'
