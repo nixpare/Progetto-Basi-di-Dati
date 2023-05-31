@@ -103,7 +103,7 @@ language plpgsql as $$
     begin
         select tipo into tipo_corso from uni.corso_laurea where nome = NEW.corso;
         if (tipo_corso = 'magistrale' and NEW.anno = 3) then
-            raise 'L''insegnamento "%" per il corso "%"(magistrale) non può essere al terzo anno', NEW.codice, NEW.corso;
+            raise 'L''insegnamento "%" per il corso "%" (magistrale) non può essere al terzo anno', NEW.codice, NEW.corso;
         end if;
 
         return NEW;
@@ -169,8 +169,27 @@ create table sostiene (
     voto int check ( voto is null or (voto >= 0 and voto <= 30) ),
     primary key (studente, data, insegnamento, corso),
     foreign key (data, insegnamento, corso) references appello on update cascade
-)
+);
 
 -- creo una funzione e un trigger che controlli che uno studente
 -- si iscriva solo ed esclusivamente ad un insegnamento a cui è
 -- iscritto
+create or replace function check_studente_corso_appello_i_u_f()
+    returns trigger
+language plpgsql as $$
+    declare
+        corso_studente uni.studente.corso%type;
+    begin
+        select corso into corso_studente from uni.studente where matricola = NEW.studente;
+
+        if (corso_studente <> NEW.corso) then
+            raise 'Lo studente "%" non può iscriversi ad un appello del corso "%"', NEW.studente, NEW.corso;
+        end if;
+
+        return NEW;
+    end;
+$$;
+
+create or replace trigger check_studente_corso_appello_i_u_t
+    before insert or update on uni.sostiene
+    for each row execute function check_studente_corso_appello_i_u_f();

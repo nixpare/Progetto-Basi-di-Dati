@@ -9,19 +9,18 @@
 	width: 6em;
 }
 
-.study-plan h5 {
-	margin-bottom: 0;
-}
-
 .collapse-btn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	/* width: 1.6em;
-	height: 1.6em; */
 	padding: .4em;
 	border-radius: 50%;
 	background-color: transparent;
+}
+.collapse-btn:hover {
+	background-color: unset;
+	color: var(--primary-color-dark);
+	transition-duration: 0s;
 }
 
 .collapse-btn * {

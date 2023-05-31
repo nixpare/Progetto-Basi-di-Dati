@@ -2,14 +2,17 @@
 
 :root {
 	--primary-segr-color: hsl(20 100% 50%);
+	--primary-segr-color-mid: hsl(20 100% 65%);
 	--primary-segr-color-light: hsl(20 100% 85%);
 	--primary-segr-color-dark: hsl(0 90% 45%);
 
 	--primary-doc-color: hsl(150 80% 50%);
+	--primary-doc-color-mid: hsl(150 80% 65%);
 	--primary-doc-color-light: hsl(150 75% 80%);
-	--primary-doc-color-dark: hsl(150 80% 35%);
+	--primary-doc-color-dark: hsl(150 80% 30%);
 
 	--primary-stud-color: hsl(200 100% 50%);
+	--primary-stud-color-mid: hsl(200 100% 65%);
 	--primary-stud-color-light: hsl(200 100% 85%);
 	--primary-stud-color-dark: hsl(220 80% 50%);
 
@@ -18,18 +21,21 @@
 
 body.segr {
 	--primary-color: var(--primary-segr-color);
+	--primary-color-mid: var(--primary-segr-color-mid);
 	--primary-color-dark: var(--primary-segr-color-dark);
 	--primary-color-light: var(--primary-segr-color-light);
 }
 
 body.doc {
 	--primary-color: var(--primary-doc-color);
+	--primary-color-mid: var(--primary-doc-color-mid);
 	--primary-color-dark: var(--primary-doc-color-dark);
 	--primary-color-light: var(--primary-doc-color-light);
 }
 
 body.stud {
 	--primary-color: var(--primary-stud-color);
+	--primary-color-mid: var(--primary-stud-color-mid);
 	--primary-color-dark: var(--primary-stud-color-dark);
 	--primary-color-light: var(--primary-stud-color-light);
 }
@@ -53,6 +59,10 @@ header h1 {
 	color: var(--primary-color-dark);
 }
 
+h5 {
+	margin-bottom: 0;
+}
+
 p {
 	color: var(--text-color);
 }
@@ -63,10 +73,28 @@ button {
 	border-radius: .8em;
 	background-color: var(--primary-color);
 }
+button:hover {
+	background-color: var(--primary-color-mid);
+}
 
 button:disabled {
 	background-color: var(--primary-color-light);
 	border: 1px solid var(--primary-color);
+}
+
+a.btn {
+	background-color: var(--primary-color-light);
+	color: var(--primary-color-dark);
+}
+a.btn:hover {
+	background-color: var(--primary-color);
+	color: #000;
+}
+a.btn::after {
+	content: '\f061';
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	margin-left: .4em;
 }
 
 input {
@@ -159,7 +187,7 @@ tr:not(.spacer) th:not(:nth-child(1)), tr:not(.spacer) td:not(:nth-child(1)) {
 	position: relative;
 }
 
-tr:not(.spacer) th:not(:nth-child(1))::after, tr:not(.spacer):not(.tr-no-delim) td:not(:nth-child(1))::after {
+tr:not(.spacer) th:not(.no-delim):not(:nth-child(1))::after, tr:not(.spacer):not(.tr-no-delim) td:not(.no-delim):not(:nth-child(1))::after {
 	content: '';
 	position: absolute;
 	top: calc(var(--b-radius) - .1em);
@@ -179,6 +207,7 @@ tr.spacer + tr td:last-child {
 }
 
 footer {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
