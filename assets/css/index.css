@@ -84,3 +84,14 @@ div.container.login {
 .login button[type="submit"] {
 	align-self: end;
 }
+
+.course-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: fit-content;
+
+	& a {
+		align-self: end;
+	}
+}

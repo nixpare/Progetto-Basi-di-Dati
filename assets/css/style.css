@@ -97,6 +97,18 @@ a.btn::after {
 	margin-left: .4em;
 }
 
+button[data-edit-action="undo"], button[data-edit-action="send"] {
+	display: none;
+}
+
+[data-edit-state] button[data-edit-action="edit"] {
+	display: none;
+}
+
+[data-edit-state] button[data-edit-action="undo"], [data-edit-state] button[data-edit-action="send"] {
+	display: unset;
+}
+
 input {
 	margin: .5em 1em;
 	padding: .3em 1em;
@@ -105,20 +117,29 @@ input {
 	border-bottom: 1px solid var(--primary-color-dark);
 }
 
+input:disabled {
+	border-bottom: 0;
+	margin: 0;
+}
+
 input:focus {
 	outline: none;
 }
 
-.password-container {
+input[type="address"] {
+	width: 40ch;
+}
+
+.password-eye-container {
 	position: relative;
 }
 
-.password-container input {
+.password-eye-container input {
 	position: relative;
 	padding-right: 2.4em;
 }
 
-.password-container i {
+.password-eye-container i {
 	position: absolute;
 	top: calc(50% - .5em);
 	bottom: calc(50% - .5em);
@@ -140,7 +161,7 @@ th {
 }
 
 tbody {
-	background-color: #eee;
+	background-color: #e3e3e3;
 }
 
 tr:not(:nth-child(1)) {

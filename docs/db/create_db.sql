@@ -31,6 +31,8 @@ create table studente (
     password varchar(24) not null,
     nome varchar(20) not null,
     cognome varchar(20) not null,
+    tel varchar(15) not null,
+    indirizzo varchar(100) not null,
     corso varchar(50) not null references corso_laurea(nome) on update cascade
 );
 -- sulla cancellazione del corso si applica la policy di NO ACTION perchè se
@@ -44,6 +46,11 @@ create or replace function check_email_unique_i_u_f()
 language plpgsql as $$
     begin
         NEW.email := trim(lower(NEW.email));
+        if (OLD IS NOT NULL) then
+            if (trim(lower(OLD.email)) = NEW.email) then
+                return NEW;
+            end if;
+        end if;
 
         -- check for segretario
         perform * from uni.segretario where trim(lower(email)) = NEW.email;
@@ -87,6 +94,7 @@ create table insegnamento (
     codice varchar(10),
     corso varchar(50) references corso_laurea(nome) on update cascade,
     anno int not null check ( anno = 1 or anno = 2 or anno = 3 ),
+    nome varchar(50) not null,
     descrizione text not null,
     responsabile email not null references docente(email) on update cascade,
     primary key (codice, corso)
@@ -193,3 +201,39 @@ $$;
 create or replace trigger check_studente_corso_appello_i_u_t
     before insert or update on uni.sostiene
     for each row execute function check_studente_corso_appello_i_u_f();
+
+-- inseriti per il test
+insert into uni.corso_laurea values
+    ('Corso di Test', 'triennale');
+insert into uni.corso_laurea values
+    ('Corso di Test 2', 'magistrale');
+
+insert into uni.segretario values
+    ('segretario@test.it', 'password', 'Nome Segretario', 'Cognome Segretario');
+insert into uni.docente values
+    ('docente@test.it', 'password', 'Nome Docente', 'Cognome Docente');
+insert into uni.studente values
+    ('000000', 'studente@test.it', 'password',
+    'Nome Studente', 'Cognome Studente', '+39 3891234567', 'Viale dei Test 0, Città Testata',
+    'Corso di Test');
+
+insert into uni.insegnamento values
+    ('INS-TEST01', 'Corso di Test', 1, 'Insegnamento di Test 1 Triennale', 'Descrizione Insegnamento di Test 1 Triennale', 'docente@test.it');
+insert into uni.insegnamento values
+    ('INS-TEST02', 'Corso di Test', 2, 'Insegnamento di Test 2', 'Descrizione Insegnamento di Test 2', 'docente@test.it');
+insert into uni.insegnamento values
+    ('INS-TEST01', 'Corso di Test 2', 1, 'Insegnamento di Test 1 Magistrale', 'Descrizione Insegnamento di Test 1 Magistrale', 'docente@test.it');
+
+insert into uni.appello values
+    ('2023-05-30', 'INS-TEST02', 'Corso di Test', 'orale');
+insert into uni.appello values
+    ('2023-06-15', 'INS-TEST01', 'Corso di Test', 'scritto');
+insert into uni.appello values
+    ('2023-06-15', 'INS-TEST02', 'Corso di Test', 'scritto');
+insert into uni.appello values
+    ('2023-06-15', 'INS-TEST01', 'Corso di Test 2', 'orale');
+
+insert into uni.sostiene values
+    ('000000', '2023-05-30', 'INS-TEST02', 'Corso di Test', NULL);
+insert into uni.sostiene values
+    ('000000', '2023-06-15', 'INS-TEST01', 'Corso di Test', NULL);
