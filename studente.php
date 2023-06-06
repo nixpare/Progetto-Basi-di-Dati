@@ -71,6 +71,7 @@
 				</div>
 			<?php } ?>
 			<table class="my-3">
+				<tr class="spacer"><td></td></tr>
 				<tr>
 					<th>N° Matricola</th>
 					<td><?php echo $_SESSION['matricola'] ?></td>

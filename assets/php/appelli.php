@@ -16,7 +16,7 @@
 			}
 		}
 		if (isset($_GET['codice'])) {
-			if ($ins['insegnamento'] === urldecode($_GET['insegnamento'])) {
+			if ($ins['insegnamento'] === urldecode($_GET['codice'])) {
 				return true;
 			}
 		}

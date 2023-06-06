@@ -4,14 +4,14 @@
 	if (empty($_SESSION)) {
 		http_response_code(301);
 		header('Location: /index.php');
-		exit();
+		return;
 	}
 
 	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' &&
 		$_SERVER['REQUEST_METHOD'] !== 'POST') {
 		http_response_code(400);
 		header('Location: /studente.php');
-		exit();
+		return;
    	}
 
 	include_once '../assets/php/appelli.php';
@@ -49,8 +49,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body class="stud">
-	<header class="container py-4 ps-5 mb-5">
+	<header class="container py-4 ps-5 mb-5 d-flex align-items-center justify-content-between">
 		<h1>Progetto Basi di Dati</h1>
+		<a class="btn" href="/studente.php">Home</a>
 	</header>
 
 	<div class="container welcome welcome-user">
@@ -65,7 +66,13 @@
 		<h5>Filtro</h5>
 		<p>Filtra gli Appelli per nome dell'insegnamento o codice</p>
 		<form class="my-3" action="">
-			<input type="text" name="insegnamento" placeholder="Filtro" <?php if (!empty($_GET)) { echo 'value="' . urldecode($_GET['insegnamento']). '"'; } ?> >
+			<input type="text" name="insegnamento" placeholder="Filtro" <?php if (!empty($_GET)) {
+				if (isset($_GET['insegnamento'])) {
+					echo 'value="' . urldecode($_GET['insegnamento']). '"';
+				} else if (isset($_GET['codice'])) {
+					echo 'value="' . urldecode($_GET['codice']). '"';
+				}
+			} ?> >
 			<button type="submit">Cerca</button>
 			<?php if (!empty($_GET)) { ?>
 				<a class="btn ms-3" href="<?php echo strtok($_SERVER['REQUEST_URI'], '?'); ?>">Rimuovi filtri</a>

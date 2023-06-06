@@ -212,6 +212,8 @@ insert into uni.segretario values
     ('segretario@test.it', 'password', 'Nome Segretario', 'Cognome Segretario');
 insert into uni.docente values
     ('docente@test.it', 'password', 'Nome Docente', 'Cognome Docente');
+insert into uni.docente values
+    ('docente2@test.it', 'password', 'Nome Docente 2', 'Cognome Docente 2');
 insert into uni.studente values
     ('000000', 'studente@test.it', 'password',
     'Nome Studente', 'Cognome Studente', '+39 3891234567', 'Viale dei Test 0, Città Testata',
@@ -223,6 +225,10 @@ insert into uni.insegnamento values
     ('INS-TEST02', 'Corso di Test', 2, 'Insegnamento di Test 2', 'Descrizione Insegnamento di Test 2', 'docente@test.it');
 insert into uni.insegnamento values
     ('INS-TEST01', 'Corso di Test 2', 1, 'Insegnamento di Test 1 Magistrale', 'Descrizione Insegnamento di Test 1 Magistrale', 'docente@test.it');
+insert into uni.insegnamento values
+    ('INS-TEST00', 'Corso di Test', 1, 'Insegnamento di Test 0', 'Descrizione Insegnamento di Test 0', 'docente2@test.it');
+insert into uni.insegnamento values
+    ('INS-TEST04', 'Corso di Test', 2, 'Insegnamento di Test 4', 'Descrizione Insegnamento di Test 4', 'docente2@test.it');
 
 insert into uni.appello values
     ('2023-05-30', 'INS-TEST02', 'Corso di Test', 'orale');
@@ -232,7 +238,27 @@ insert into uni.appello values
     ('2023-06-15', 'INS-TEST02', 'Corso di Test', 'scritto');
 insert into uni.appello values
     ('2023-06-15', 'INS-TEST01', 'Corso di Test 2', 'orale');
+insert into uni.appello values
+    ('2023-02-17', 'INS-TEST00', 'Corso di Test', 'scritto');
+insert into uni.appello values
+    ('2023-02-24', 'INS-TEST00', 'Corso di Test', 'orale');
+insert into uni.appello values
+    ('2023-06-30', 'INS-TEST00', 'Corso di Test', 'scritto');
+insert into uni.appello values
+    ('2023-01-17', 'INS-TEST04', 'Corso di Test', 'orale');
+insert into uni.appello values
+    ('2023-01-28', 'INS-TEST04', 'Corso di Test', 'orale');
+insert into uni.appello values
+    ('2023-06-27', 'INS-TEST04', 'Corso di Test', 'orale');
 
+insert into uni.sostiene values
+    ('000000', '2023-01-17', 'INS-TEST04', 'Corso di Test', 30);
+insert into uni.sostiene values
+    ('000000', '2023-01-28', 'INS-TEST04', 'Corso di Test', 15);
+insert into uni.sostiene values
+    ('000000', '2023-02-17', 'INS-TEST00', 'Corso di Test', 27);
+insert into uni.sostiene values
+    ('000000', '2023-02-24', 'INS-TEST00', 'Corso di Test', 24);
 insert into uni.sostiene values
     ('000000', '2023-05-30', 'INS-TEST02', 'Corso di Test', NULL);
 insert into uni.sostiene values
