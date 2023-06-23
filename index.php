@@ -8,6 +8,10 @@
 					http_response_code(301);
 					header('Location: /studente.php');
 					return;
+				case 'doc':
+					http_response_code(301);
+					header('Location: /docente.php');
+					return;
 			}
 		}
 
@@ -38,8 +42,23 @@
 			echo '<p>Email: ' . $email . ' - Password: ' . $password . '</p>';
 			return;
 		case 'doc':
-			echo '<h1>Docente</h1>';
-			echo '<p>Email: ' . $email . ' - Password: ' . $password . '</p>';
+			$result = login_docente($email, $password);
+
+			if (!$result) {
+				http_response_code(400);
+				$form_err_message = 'Accesso fallito';
+				goto end;
+			}
+
+			session_start();
+			session_reset();
+
+			$_SESSION['email'] = $email;
+			$_SESSION['tipo_utente'] = $userType;
+			$_SESSION['nome'] = $result['nome'] . ' ' . $result['cognome'];
+
+			http_response_code(301);
+			header('Location: /docente.php');
 			return;
 		case 'stud':
 			$result = login_studente($email, $password);
@@ -121,7 +140,7 @@
 		<div class="course-container">
 			<h2>Corsi di Laurea</h2>
 			<p>Visualizza le informazioni di tutti i Corsi di Laurea</p>
-			<a class="btn align-self-end" href="/corsi" target="_blank">Vai</a>
+			<a class="btn align-self-end" href="/corsi.php" target="_blank">Vai</a>
 		</div>
 	</div>
 

@@ -70,7 +70,7 @@
 	?>
 
 	<div class="container mt-5">
-		<h4 class="highlight">Carriera valida</h4>
+		<h4>Carriera valida</h4>
 		<table>
 			<?php if (empty($carriera_valida)) {
 				echo '<td>Nessun esame valido</td>'; 
@@ -103,7 +103,7 @@
 	</div>
 
 	<div class="container mt-5" id="exam-accordion">
-		<h4 class="highlight">Carriera Completa</h4>
+		<h4>Carriera Completa</h4>
 		<?php
 			$anni = array('1' => array(), '2' => array(), '3' => array());
 			foreach ($carriera as $risultato) {
@@ -157,8 +157,8 @@
 		<?php } } } ?>
 	</div>
 
-	<div class="container my-5">
-		<h4 class="mb-3 highlight-warning">Rinuncia agli studi</h4>
+	<div class="container my-4">
+		<h4 class="mb-3">Rinuncia agli studi</h4>
 		<div class="ms-3">
 			<div class="alert alert-warning">
 				<p class="m-0">ATTENZIONE! L'operazione non è reversibile, una volta confermata verrà loggato fuori.</p>

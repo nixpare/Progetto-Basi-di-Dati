@@ -1,6 +1,6 @@
 <?php
 	function filter_passed($ins) {
-		if (empty($_GET)) {
+		if ((!isset($_GET['insegnamento'])  || $_GET['insegnamento'] === '') && (!isset($_GET['codice']) || $_GET['codice'] === '')) {
 			return true;
 		}
 
@@ -16,7 +16,7 @@
 			}
 		}
 		if (isset($_GET['codice'])) {
-			if ($ins['insegnamento'] === urldecode($_GET['codice'])) {
+			if (strtolower($ins['insegnamento']) === strtolower(urldecode($_GET['codice']))) {
 				return true;
 			}
 		}
@@ -101,7 +101,7 @@
 
 		$query = 'insert into uni.sostiene values
 					($1, $2, $3, $4, NULL)';
-		$query_name = 'delete_iscrizione';
+		$query_name = 'add_iscrizione';
 		$params = array($_SESSION['matricola'], $data, $insegnamento, $_SESSION['corso']);
 		
 		$result = pg_prepare($db, $query_name, $query);

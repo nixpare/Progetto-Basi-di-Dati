@@ -67,6 +67,14 @@ p {
 	color: var(--text-color);
 }
 
+.highlight {
+	color: var(--primary-color-dark);
+}
+
+.highlight-warning {
+	color: hsl(0, 100%, 45%);
+}
+
 button {
 	padding: .6em 1.2em;
 	border: 0;

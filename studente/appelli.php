@@ -14,7 +14,7 @@
 		return;
    	}
 
-	include_once '../assets/php/appelli.php';
+	include_once '../assets/php/studente_appelli.php';
 
 	if (!empty($_POST)) {
 		switch ($_POST['action']) {
@@ -62,8 +62,8 @@
 		</div>
 	</div>
 
-	<div class="container my-4 filter">
-		<h5>Filtro</h5>
+	<div class="container my-4">
+		<h5 class="highlight">Filtro</h5>
 		<p>Filtra gli Appelli per nome dell'insegnamento o codice</p>
 		<form class="my-3" action="">
 			<input type="text" name="insegnamento" placeholder="Filtro" <?php if (!empty($_GET)) {
@@ -87,7 +87,7 @@
 	<?php } ?>
 
 	<div class="container mt-5">
-		<h4>Iscrizioni</h4>
+		<h4 class="highlight">Iscrizioni</h4>
 		<table>
 			<thead>
 				<tr>
@@ -149,7 +149,7 @@
 	?>
 
 	<div class="container mt-5" id="exam-accordion">
-		<h4>Disponibili</h4>
+		<h4 class="highlight">Disponibili</h4>
 		<?php
 			if (empty($anni['1']) and empty($anni['2']) and empty($anni['3'])) {
 				echo '<table><td>Nessun appello disponibile</td></table>';
