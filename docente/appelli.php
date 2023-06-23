@@ -1,5 +1,4 @@
 <?php
-	error_reporting(E_ALL);
 	session_start();
 
 	if (empty($_SESSION)) {
@@ -87,13 +86,12 @@
 		</form>
 	</div>
 
-	<?php if (isset($delete_err_message)) { ?>
-		<div class="alert alert-danger">
-			<?php echo $delete_err_message ?>
-		</div>
-	<?php } ?>
-
 	<div class="container mt-5">
+		<?php if (isset($delete_err_message)) { ?>
+			<div class="my-3 alert alert-danger">
+				<?php echo $delete_err_message ?>
+			</div>
+		<?php } ?>
 		<h4 class="highlight">Appelli</h4>
 		<table>
 			<thead>
@@ -138,7 +136,7 @@
 						</td>
 					<?php } else { ?>
 						<td><a class="btn" target="_blank"
-							href="/registro.php?data=<?php echo $app['data']?>&insegnamento=<?php echo $app['insegnamento'] ?>&corso=<?php echo $app['corso'] ?>">
+							href="/docente/registro.php?data=<?php echo $app['data']?>&insegnamento=<?php echo $app['insegnamento'] ?>&corso=<?php echo $app['corso'] ?>">
 							Registro Voti
 						</a></td>
 					<?php } ?>
@@ -148,13 +146,12 @@
 		</table>
 	</div>
 
-	<?php if (isset($add_err_message)) { ?>
-		<div class="alert alert-danger">
-			<?php echo $add_err_message ?>
-		</div>
-	<?php } ?>
-
 	<div class="container mt-5">
+		<?php if (isset($add_err_message)) { ?>
+			<div class="my-3 alert alert-danger">
+				<?php echo $add_err_message ?>
+			</div>
+		<?php } ?>
 		<h4 class="highlight">Crea Appelli</h4>
 		<form action="" method="post">
 			<input class="d-none" type="text" name="action" value="add">

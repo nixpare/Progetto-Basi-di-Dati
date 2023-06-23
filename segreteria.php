@@ -1,5 +1,5 @@
 <?php
-	include_once './assets/php/docente.php';
+	include_once './assets/php/segreteria.php';
 	session_start();
 
 	if (empty($_SESSION)) {
@@ -10,7 +10,7 @@
 
 	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
 		http_response_code(400);
-		header('Location: /docente.php');
+		header('Location: /segreteria.php');
 		return;
    	}
 
@@ -35,7 +35,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Area Docenti</title>
+	<title>Area Segreteria</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="stylesheet" href="/assets/css/utente.css">
@@ -94,61 +94,12 @@
 		</div>
 	</div>
 
-	<?php
-		$insegnamenti = get_insegnamenti();
-
-		$anni = array('1' => array(), '2' => array(), '3' => array());
-		foreach ($insegnamenti as $ins) {
-			$anni[$ins['anno']][] = $ins;
-		}
-	?>
-	
-	<div class="container study-plan">
-		<h4 class="highlight">Insegnamenti</h4>
-		<div class="mt-3 d-flex align-items-center">
-			<a class="ms-4 btn" href="/docente/appelli.php" target="_blank">Vai agli Appelli</a>
-		</div>
-		<div>
-			<?php foreach ($anni as $i => $anno) { if (!empty($anno)) { ?>
-			<div class="my-4">
-				<div class="d-flex align-items-center">
-					<?php
-						switch ($i) {
-							case '1': $nome_anno = 'Primo'; break;
-							case '2': $nome_anno = 'Secondo'; break;
-							case '3': $nome_anno = 'Terzo'; break;
-						}
-					?>
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="me-2 fa-solid fa-chevron-right"></i>
-						<h5><?php echo $nome_anno . ' anno' ?></h5>
-					</div>
-				</div>
-				<div class="container my-2">
-					<table>
-						<thead>
-							<tr>
-								<th>Codice</th>
-								<th>Corso</th>
-								<th>Nome</th>
-								<th></th>
-							</tr>
-							<tr class="spacer"><th></th></tr>
-						</thead>
-						<tbody>
-							<?php foreach ($anno as $ins) { ?>
-							<tr>
-								<td><?php echo $ins['codice'] ?></td>
-								<td><?php echo $ins['corso'] ?></td>
-								<td><?php echo $ins['nome'] ?></td>
-								<td><a class="btn" href="<?php echo $ins['link_appelli'] ?>" target="_blank">Appelli</a></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<?php } } ?>
+	<div class="container my-5">
+		<h4>Gestionale</h4>
+		<div class="ms-4 my-3 d-flex align-items-center gap-3">
+			<a class="btn" href="/segreteria/studenti.php">Studenti</a>
+			<a class="btn" href="/segreteria/docenti.php">Docenti</a>
+			<a class="btn" href="/segreteria/corsi.php">Corsi di Laurea</a>
 		</div>
 	</div>
 

@@ -75,7 +75,9 @@
 		$result = pg_prepare($db, $query_name, $query);
 		$result = pg_execute($db, $query_name, $params);
 
-		if (!$result) {
+		$num_rows = pg_affected_rows($result);
+
+		if ($num_rows == 0) {
 			return false;
 		}
 		return true;
@@ -91,7 +93,9 @@
 		$result = pg_prepare($db, $query_name, $query);
 		$result = pg_execute($db, $query_name, $params);
 
-		if (!$result) {
+		$num_rows = pg_affected_rows($result);
+
+		if ($num_rows == 0) {
 			return false;
 		}
 		return true;
@@ -107,7 +111,9 @@
 		$result = pg_prepare($db, $query_name, $query);
 		$result = pg_execute($db, $query_name, $params);
 
-		if (!$result) {
+		$num_rows = pg_affected_rows($result);
+
+		if ($num_rows == 0) {
 			return false;
 		}
 		return true;

@@ -12,6 +12,10 @@
 					http_response_code(301);
 					header('Location: /docente.php');
 					return;
+				case 'segr':
+						http_response_code(301);
+						header('Location: /segreteria.php');
+						return;
 			}
 		}
 
@@ -38,8 +42,23 @@
 
 	switch ($userType) {
 		case 'segr':
-			echo '<h1>Segreteria</h1>';
-			echo '<p>Email: ' . $email . ' - Password: ' . $password . '</p>';
+			$result = login_segreteria($email, $password);
+
+			if (!$result) {
+				http_response_code(400);
+				$form_err_message = 'Accesso fallito';
+				goto end;
+			}
+
+			session_start();
+			session_reset();
+
+			$_SESSION['email'] = $email;
+			$_SESSION['tipo_utente'] = $userType;
+			$_SESSION['nome'] = $result['nome'] . ' ' . $result['cognome'];
+
+			http_response_code(301);
+			header('Location: /segreteria.php');
 			return;
 		case 'doc':
 			$result = login_docente($email, $password);
