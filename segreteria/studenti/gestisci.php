@@ -1,7 +1,7 @@
 <?php
-	include_once './assets/php/db.php';
-	include_once './assets/php/http.php';
-	include_once './assets/php/studente.php';
+	include_once '../../assets/php/db.php';
+	include_once '../../assets/php/http.php';
+	include_once '../../assets/php/studente.php';
 	session_start();
 
 	if (empty($_SESSION)) {
@@ -29,7 +29,6 @@
 	}
 
 	end:
-	init_studente();
 ?>
 
 <!DOCTYPE html>

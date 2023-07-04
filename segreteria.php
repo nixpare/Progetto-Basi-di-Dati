@@ -1,4 +1,6 @@
 <?php
+	include_once './assets/php/db.php';
+	include_once './assets/php/http.php';
 	include_once './assets/php/segreteria.php';
 	session_start();
 
@@ -8,9 +10,7 @@
 		return;
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /segreteria.php');
+	if (not_get_or_post()) {
 		return;
    	}
 

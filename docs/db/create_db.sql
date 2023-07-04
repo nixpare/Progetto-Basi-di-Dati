@@ -90,6 +90,25 @@ create or replace trigger check_email_unique_i_u_t
     before insert or update on uni.studente
     for each row execute function check_email_unique_i_u_f();
 
+create or replace function studente_corso_laurea_i_u_f () 
+	returns trigger
+language plpgsql as $$
+	begin
+		perform * from uni.insegnamento
+		where insegnamento.corso = NEW.corso;
+
+		if not FOUND then
+			raise 'Il corso % non ha insegnamenti associati', NEW.corso;
+		end if;
+
+		return NEW;
+	end;
+$$;
+
+create or replace trigger studente_corso_laurea_i_u_t
+    before insert or update on uni.studente
+    for each row execute function studente_corso_laurea_i_u_f();
+
 create table insegnamento (
     codice varchar(10),
     corso varchar(50) references corso_laurea(nome) on update cascade,
@@ -168,6 +187,36 @@ create table appello (
     primary key (data, insegnamento, corso),
     foreign key (insegnamento, corso) references insegnamento(codice, corso) on update cascade
 );
+
+-- creo una funzione e un trigger che controlli che non ci siano
+-- altri appelli dello stesso anno del corso
+create or replace function check_appelli_anno_i_u_f()
+    returns trigger
+language plpgsql as $$
+    declare
+        anno_appello uni.insegnamento.anno%type;
+    begin
+        select anno into anno_appello from uni.insegnamento
+        where codice = NEW.insegnamento and corso = NEW.corso;
+
+        perform * from
+            uni.appello
+            join
+            uni.insegnamento on appello.insegnamento = insegnamento.codice and appello.corso = insegnamento.corso
+        where appello.corso = NEW.corso and insegnamento.anno = anno_appello and appello.data = NEW.data;
+
+        if (FOUND) then
+            raise 'Un appello del corso "%" (anno %) è già registrato in data %', NEW.corso, anno_appello, NEW.data;
+            -- return NULL;
+        end if;
+
+        return NEW;
+    end;
+$$;
+
+create or replace trigger check_appelli_anno_i_u_t
+    before insert or update on uni.appello
+    for each row execute function check_appelli_anno_i_u_f();
 
 create table sostiene (
     studente char(6),

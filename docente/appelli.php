@@ -28,8 +28,8 @@
 				$split = explode(':', $_POST['insegnamento-corso'], 2);
 
 				$result = add_appello($_POST['data'], $split[0], $split[1], $_POST['tipo']);
-				if (!$result) {
-					$add_err_message = "Errore nella creazione dell'appello";
+				if (!$result[0]) {
+					$add_err_message = $result[1];
 				}
 				break;
 		}

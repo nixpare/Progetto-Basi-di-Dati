@@ -1,22 +1,11 @@
 <?php
-	if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'HEAD') {
-		session_start();
+	include_once './assets/php/login.php';
+	session_start();
 
+	if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'HEAD') {
 		if (!empty($_SESSION) && isset($_SESSION['tipo_utente'])) {
-			switch ($_SESSION['tipo_utente']) {
-				case 'stud':
-					http_response_code(301);
-					header('Location: /studente.php');
-					return;
-				case 'doc':
-					http_response_code(301);
-					header('Location: /docente.php');
-					return;
-				case 'segr':
-						http_response_code(301);
-						header('Location: /segreteria.php');
-						return;
-			}
+			already_logged_in();
+			return;
 		}
 
 		goto end;
@@ -38,21 +27,18 @@
 	$email = $_POST['email'];
 	$password = $_POST['password'];
 
-	include_once './assets/php/login.php';
+	$result = login_user($userType, $email, $password)['result'];
+
+	if (!$result) {
+		http_response_code(400);
+		$form_err_message = 'Accesso fallito';
+		goto end;
+	}
+
+	session_reset();
 
 	switch ($userType) {
 		case 'segr':
-			$result = login_segreteria($email, $password);
-
-			if (!$result) {
-				http_response_code(400);
-				$form_err_message = 'Accesso fallito';
-				goto end;
-			}
-
-			session_start();
-			session_reset();
-
 			$_SESSION['email'] = $email;
 			$_SESSION['tipo_utente'] = $userType;
 			$_SESSION['nome'] = $result['nome'] . ' ' . $result['cognome'];
@@ -61,17 +47,6 @@
 			header('Location: /segreteria.php');
 			return;
 		case 'doc':
-			$result = login_docente($email, $password);
-
-			if (!$result) {
-				http_response_code(400);
-				$form_err_message = 'Accesso fallito';
-				goto end;
-			}
-
-			session_start();
-			session_reset();
-
 			$_SESSION['email'] = $email;
 			$_SESSION['tipo_utente'] = $userType;
 			$_SESSION['nome'] = $result['nome'] . ' ' . $result['cognome'];
@@ -80,17 +55,6 @@
 			header('Location: /docente.php');
 			return;
 		case 'stud':
-			$result = login_studente($email, $password);
-
-			if (!$result) {
-				http_response_code(400);
-				$form_err_message = 'Accesso fallito';
-				goto end;
-			}
-
-			session_start();
-			session_reset();
-
 			$_SESSION['email'] = $email;
 			$_SESSION['tipo_utente'] = $userType;
 			$_SESSION['matricola'] = $result['matricola'];

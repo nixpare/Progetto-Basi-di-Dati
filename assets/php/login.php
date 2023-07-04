@@ -1,43 +1,41 @@
 <?php
-	function login_studente($email, $password) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+	include './assets/php/db.php';
 
-		$query = 'select matricola, nome, cognome, corso from uni.studente
-					where email = $1 and password = $2';
-		$query_name = 'login_studente';
-		$params = array($email, $password);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		return pg_fetch_assoc($result);
+	function already_logged_in() {
+		http_response_code(301);
+		switch ($_SESSION['tipo_utente']) {
+			case 'stud':
+				header('Location: /studente.php');
+			case 'doc':
+				header('Location: /docente.php');
+			case 'segr':
+				header('Location: /segreteria.php');
+		}
 	}
 
-	function login_docente($email, $password) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+	function login_user($userType, $email, $password) {
+		$selection = '';
+		$table = '';
+		switch ($userType) {
+			case 'stud':
+				$selection = 'matricola, nome, cognome, corso';
+				$table = 'studente';
+				break;
+			case 'doc':
+				$selection = 'nome, cognome';
+				$table = 'docenti';
+				break;
+			case 'segr':
+				$selection = 'nome, cognome';
+				$table = 'segretario';
+				break;
+			default:
+				echo 'Bella - ';
+				return false;
+		}
 
-		$query = 'select nome, cognome from uni.docente
+		$query = 'select ' . $selection . ' from uni.' . $table . ' 
 					where email = $1 and password = $2';
-		$query_name = 'login_docente';
-		$params = array($email, $password);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		return pg_fetch_assoc($result);
-	}
-
-	function login_segreteria($email, $password) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
-		$query = 'select nome, cognome from uni.segretario
-					where email = $1 and password = $2';
-		$query_name = 'login_segreteria';
-		$params = array($email, $password);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		return pg_fetch_assoc($result);
+		return db_single_select('login', $query, array($email, $password));
 	}
 ?>

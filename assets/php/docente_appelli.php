@@ -91,8 +91,12 @@
 		$result = pg_execute($db, $query_name, $params);
 
 		if (!$result) {
-			return false;
+			$query_error = explode('CONTEXT', pg_last_error($db), 2)[0];
+			$query_error = str_replace('ERRORE:', '', $query_error);
+			$query_error = trim($query_error);
+
+			return array(false, $query_error);
 		}
-		return true;
+		return array(true);
 	}
 ?>
