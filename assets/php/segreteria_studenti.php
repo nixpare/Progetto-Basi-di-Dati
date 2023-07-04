@@ -4,7 +4,11 @@
 			return true;
 		}
 
-		if (strtolower($stud['cognome']) === strtolower(urldecode($_GET['stud']))) {
+		if (str_contains(strtolower($stud['cognome']), strtolower(urldecode($_GET['stud'])))) {
+			return true;
+		}
+
+		if (str_contains(strtolower($stud['matricola']), strtolower(urldecode($_GET['stud'])))) {
 			return true;
 		}
 
@@ -12,8 +16,18 @@
 	}
 
 	function get_studenti() {
-		$query = 'select * from uni.studente';
-		return db_multi_select('get_studenti', $query, array())['result'];
+		$query = 'select * from uni.studente order by matricola';
+		$result = db_multi_select('get_studenti', $query, array())['result'];
+		
+		$studenti = array();
+		foreach ($result as $stud) {
+			if (!filter_passed($stud)) {
+				continue;
+			}
+			$studenti[] = $stud;
+		}
+		
+		return $studenti;
 	}
 
 	function get_corsi() {

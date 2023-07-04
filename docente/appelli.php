@@ -1,39 +1,40 @@
 <?php
+	include_once '../assets/php/db.php';
+	include_once '../assets/php/http.php';
+	include_once '../assets/php/docente_appelli.php';
+
 	session_start();
 
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' &&
-		$_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /docente.php');
+	if (not_get_or_post()) {
 		return;
    	}
 
-	include_once '../assets/php/docente_appelli.php';
-
-	if (!empty($_POST)) {
-		switch ($_POST['action']) {
-			case 'delete':
-				$result = delete_appello($_POST['data'], $_POST['insegnamento'], $_POST['corso']);
-				if (!$result) {
-					$delete_err_message = "Errore nella cancellazione dell'appello";
-				}
-				break;
-			case 'add':
-				$split = explode(':', $_POST['insegnamento-corso'], 2);
-
-				$result = add_appello($_POST['data'], $split[0], $split[1], $_POST['tipo']);
-				if (!$result[0]) {
-					$add_err_message = $result[1];
-				}
-				break;
-		}
+	if (invalid_access('doc')) {
+		return;
 	}
+
+	if (empty($_POST)) {
+		goto end;
+	}
+
+	switch ($_POST['action']) {
+		case 'delete':
+			$result = delete_appello($_POST['data'], $_POST['insegnamento'], $_POST['corso']);
+			if (!$result) {
+				$delete_err_message = "Errore nella cancellazione dell'appello";
+			}
+			break;
+		case 'add':
+			$split = explode(':', $_POST['insegnamento-corso'], 2);
+
+			$result = add_appello($_POST['data'], $split[0], $split[1], $_POST['tipo']);
+			if (!$result[0]) {
+				$add_err_message = $result[1];
+			}
+			break;
+	}
+
+	end:
 ?>
 
 <!DOCTYPE html>

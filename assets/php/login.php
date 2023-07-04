@@ -1,6 +1,4 @@
 <?php
-	include './assets/php/db.php';
-
 	function already_logged_in() {
 		http_response_code(301);
 		switch ($_SESSION['tipo_utente']) {
@@ -23,7 +21,7 @@
 				break;
 			case 'doc':
 				$selection = 'nome, cognome';
-				$table = 'docenti';
+				$table = 'docente';
 				break;
 			case 'segr':
 				$selection = 'nome, cognome';

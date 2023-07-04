@@ -2,17 +2,16 @@
 	include_once './assets/php/db.php';
 	include_once './assets/php/http.php';
 	include_once './assets/php/segreteria.php';
+	
 	session_start();
-
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
 
 	if (not_get_or_post()) {
 		return;
    	}
+
+	if (invalid_access('segr')) {
+		return;
+	}
 
 	if (empty($_POST)) {
 		goto end;

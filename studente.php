@@ -2,17 +2,16 @@
 	include_once './assets/php/db.php';
 	include_once './assets/php/http.php';
 	include_once './assets/php/studente.php';
+	
 	session_start();
-
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
 
 	if (not_get_or_post()) {
 		return;
    	}
+
+	if (invalid_access('stud')) {
+		return;
+	}
 
 	if (empty($_POST)) {
 		goto end;
@@ -31,6 +30,10 @@
 			$field = 'indirizzo';
 			$value = $_POST['indirizzo'];
 			break;
+		default:
+			http_response_code(400);
+			$form_err_message = 'Richiesta non valida';
+			goto end;
 	}
 
 	$update_result = change_field($_SESSION['matricola'], $field, $value);

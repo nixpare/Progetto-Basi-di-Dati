@@ -1,37 +1,38 @@
 <?php
+	include_once '../assets/php/db.php';
+	include_once '../assets/php/http.php';
+	include_once '../assets/php/studente_appelli.php';
+	
 	session_start();
 
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' &&
-		$_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /studente.php');
+	if (not_get_or_post()) {
 		return;
    	}
 
-	include_once '../assets/php/studente_appelli.php';
-
-	if (!empty($_POST)) {
-		switch ($_POST['action']) {
-			case 'delete':
-				$result = delete_iscrizione($_POST['data'], $_POST['insegnamento']);
-				if (!$result) {
-					$delete_err_message = "Errore nell'annullamento dell'iscrizione";
-				}
-				break;
-			case 'add':
-				$result = add_iscrizione($_POST['data'], $_POST['insegnamento']);
-				if (!$result) {
-					$add_err_message = "Errore durante l'iscrizione all'esame";
-				}
-				break;
-		}
+	if (invalid_access('stud')) {
+		return;
 	}
+
+	if (empty($_POST)) {
+		goto end;
+	}
+
+	switch ($_POST['action']) {
+		case 'delete':
+			$result = delete_iscrizione($_POST['data'], $_POST['insegnamento']);
+			if (!$result) {
+				$delete_err_message = "Errore nell'annullamento dell'iscrizione";
+			}
+			break;
+		case 'add':
+			$result = add_iscrizione($_POST['data'], $_POST['insegnamento']);
+			if (!$result) {
+				$add_err_message = "Errore durante l'iscrizione all'esame";
+			}
+			break;
+	}
+
+	end:
 ?>
 
 <!DOCTYPE html>

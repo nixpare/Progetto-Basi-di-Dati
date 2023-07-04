@@ -89,6 +89,8 @@ create or replace trigger check_email_unique_i_u_t
     before insert or update on uni.studente
     for each row execute function check_email_unique_i_u_f();
 
+--- create funzione e trigger che controllino che il corso di studente abbia almeno un insegnamento
+
 create or replace function studente_corso_laurea_i_u_f () 
 	returns trigger
 language plpgsql as $$
@@ -249,6 +251,32 @@ $$;
 create or replace trigger check_studente_corso_appello_i_u_t
     before insert or update on uni.sostiene
     for each row execute function check_studente_corso_appello_i_u_f();
+
+create or replace function get_carriera_completa(matricola uni.studente.matricola%type)
+    returns table (
+        data uni.sostiene.data%type,
+        insegnamento uni.sostiene.insegnamento%type,
+        nome uni.insegnamento.nome%type,
+        anno uni.insegnamento.anno%type,
+        tipo uni.appello.tipo%type,
+        voto uni.sostiene.voto%type
+    )
+language plpgsql as $$
+    begin
+        return query (
+            select sostiene.data, sostiene.insegnamento, insegnamento.nome, insegnamento.anno, appello.tipo, sostiene.voto from
+                uni.studente
+                join
+                uni.sostiene on studente.matricola = sostiene.studente and studente.corso = sostiene.corso
+                join
+                uni.appello on sostiene.data = appello.data and sostiene.insegnamento = appello.insegnamento and sostiene.corso = appello.corso
+                join
+                uni.insegnamento on sostiene.insegnamento = insegnamento.codice and sostiene.corso = insegnamento.corso
+            where sostiene.voto is not null
+            order by insegnamento.anno, insegnamento.nome, sostiene.data
+        );
+    end;
+$$;
 
 -- inseriti per il test
 insert into uni.corso_laurea values

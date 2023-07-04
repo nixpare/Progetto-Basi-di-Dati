@@ -1,29 +1,29 @@
 <?php
-	error_reporting(E_ALL);
+	include_once '../assets/php/db.php';
+	include_once '../assets/php/http.php';
+	include_once '../assets/php/studente_carriera.php';
+
 	session_start();
 
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' &&
-		$_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /studente.php');
+	if (not_get_or_post()) {
 		return;
    	}
 
-	if (!empty($_POST)) {
-		if (isset($_POST['rinuncia'])) {
-			http_response_code(301);
-			header('Location: /logout.php');
-			return;
-		}
+	if (invalid_access('stud')) {
+		return;
 	}
 
-	include_once '../assets/php/carriera.php';
+	if (empty($_POST)) {
+		goto end;
+	}
+
+	if (isset($_POST['rinuncia'])) {
+		http_response_code(301);
+		header('Location: /logout.php');
+		return;
+	}
+
+	end:
 ?>
 
 <!DOCTYPE html>

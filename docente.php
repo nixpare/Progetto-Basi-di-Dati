@@ -1,25 +1,36 @@
 <?php
+	include_once './assets/php/http.php';
+	include_once './assets/php/db.php';
 	include_once './assets/php/docente.php';
+
 	session_start();
 
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /docente.php');
+	if (not_get_or_post()) {
 		return;
    	}
+
+	if (invalid_access('doc')) {
+		return;
+	}
 
 	if (empty($_POST)) {
 		goto end;
 	}
 
-	if (isset($_POST['password'])) {
-		$update_result = change_password($_POST['password']);
+	if (!isset($_POST['password'])) {
+		http_response_code(400);
+		$form_err_message = 'Richiesta non valida';
+		goto end;
+	}
+
+	$update_result = change_field($_SESSION['email'], 'password', $_POST['password']);
+
+	if ($update_result['result'] == 0) {
+		if ($update_result['error'] != '') {
+			$form_err_message = $update_result['error'];
+		} else {
+			$form_err_message = "Errore nell'aggiornare i dati";
+		}
 	}
 
 	if (!$update_result) {

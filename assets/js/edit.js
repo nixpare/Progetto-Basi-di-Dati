@@ -3,7 +3,7 @@ editBtns.forEach(btn => {
 	btn.addEventListener('click', ev => {
 		let /** @type {HTMLFormElement} */ form = document.getElementById(ev.target.getAttribute('data-edit-target'))
 		let container = document.getElementById(form.getAttribute('data-edit-container'))
-		let /** @type {HTMLInputElement} */ input = form.querySelector('input')
+		let /** @type {HTMLInputElement} */ input = form.querySelector('input, select')
 
 		switch (ev.target.getAttribute('data-edit-action')) {
 			case 'edit':

@@ -1,8 +1,8 @@
 <?php
 	include_once '../../assets/php/db.php';
 	include_once '../../assets/php/http.php';
-	include_once '../../assets/php/studente.php';
-	include_once '../../assets/php/segreteria_studenti.php';
+	include_once '../../assets/php/docente.php';
+	include_once '../../assets/php/segreteria_docenti.php';
 
 	session_start();
 
@@ -14,8 +14,8 @@
 		return;
 	}
 
-	if (empty($_GET) || ! isset($_GET['matricola'])) {
-		$studente_error = 'Errore nel caricare la pagina, tornare indietro e riprovare';
+	if (empty($_GET) || ! isset($_GET['doc'])) {
+		$docente_error = 'Errore nel caricare la pagina, tornare indietro e riprovare';
 		goto end;
 	}
 
@@ -32,25 +32,9 @@
 			$field = 'nome';
 			$value = $_POST['nome'];
 			break;
-		case isset($_POST['email']):
-			$field = 'email';
-			$value = $_POST['email'];
-			break;
 		case isset($_POST['password']):
 			$field = 'password';
 			$value = $_POST['password'];
-			break;
-		case isset($_POST['tel']):
-			$field = 'tel';
-			$value = $_POST['tel'];
-			break;
-		case isset($_POST['indirizzo']):
-			$field = 'indirizzo';
-			$value = $_POST['indirizzo'];
-			break;
-		case isset($_POST['corso']):
-			$field = 'corso';
-			$value = $_POST['corso'];
 			break;
 		default:
 			http_response_code(400);
@@ -58,7 +42,7 @@
 			goto end;
 	}
 
-	$update_result = change_field($_GET['matricola'], $field, $value);
+	$update_result = change_field($_GET['email'], $field, $value);
 
 	if ($update_result['result'] == 0) {
 		if ($update_result['error'] != '') {
@@ -77,7 +61,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Gestione Studenti</title>
+	<title>Gestione Docenti</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="stylesheet" href="/assets/css/utente.css">
@@ -96,34 +80,34 @@
 	<div class="container welcome welcome-user">
 		<img src="/assets/img/student-user-img.png" alt="User Picture">
 		<div>
-			<h2>Gestione Studente</h2>
+			<h2>Gestione Docente</h2>
 			<h3><?php echo $_SESSION['nome'] ?></h3>
 		</div>
 	</div>
 
 	<div class="container my-5">
 		<?php
-			if (!isset($studente_error)) {
-				$result = get_studente($_GET['matricola']);
+			if (!isset($docente_error)) {
+				$result = get_docente($_GET['doc']);
 				if (!$result['result']) {
 					if ($result['error'] != '') {
-						$studente_error = $result['error'];
+						$docente_error = $result['error'];
 					} else {
-						$studente_error = 'Errore nel caricare la pagina, tornare indietro e riprovare';
+						$docente_error = 'Errore nel caricare la pagina, tornare indietro e riprovare';
 					}
 				} else {
-					$studente = $result['result'];
+					$docente = $result['result'];
 				}
 			}
 		?>
 
-		<?php if (isset($studente_error)) { ?>
+		<?php if (isset($docente_error)) { ?>
 			<div class="alert alert-danger" role="alert">
-				<?php echo $studente_error ?>
+				<?php echo $docente_error ?>
 			</div>
 		<?php } else { ?>
 		
-		<h4>Studente - <?php echo $studente['cognome'] . ' ' . $studente['nome'] ?></h4>
+		<h4>Docente - <?php echo $docente['cognome'] . ' ' . $docente['nome'] ?></h4>
 		<div>
 			<?php if (isset($form_err_message)) { ?>
 				<div class="alert alert-danger" role="alert">
@@ -132,17 +116,11 @@
 			<?php } ?>
 			<table class="my-3">
 				<tr class="spacer"><td></td></tr>
-				<tr>
-					<th>N° Matricola</th>
-					<td><?php echo $studente['matricola'] ?></td>
-					<td class="no-delim"></td>
-				</tr>
-				<tr class="spacer"><td></td></tr>
 				<tr id="cognome-edit-container">
 					<th>Cognome</th>
 					<td>
 						<form action="" method="post" id="edit-cognome" data-edit-container="cognome-edit-container">
-							<input class="px-0" type="text" name="cognome" id="cognome" value="<?php echo $studente['cognome'] ?>" disabled>
+							<input class="px-0" type="text" name="cognome" id="cognome" value="<?php echo $docente['cognome'] ?>" disabled>
 						</form>
 					</td>
 					<td>
@@ -156,27 +134,13 @@
 					<th>Nome</th>
 					<td>
 						<form action="" method="post" id="edit-nome" data-edit-container="nome-edit-container">
-							<input class="px-0" type="text" name="nome" id="nome" value="<?php echo $studente['nome'] ?>" disabled>
+							<input class="px-0" type="text" name="nome" id="nome" value="<?php echo $docente['nome'] ?>" disabled>
 						</form>
 					</td>
 					<td>
 						<button data-edit-target="edit-nome" data-edit-action="edit">Modifica</button>
 						<button data-edit-target="edit-nome" data-edit-action="undo">Annulla</button>
 						<button data-edit-target="edit-nome" data-edit-action="send">Invia</button>
-					</td>
-				</tr>
-				<tr class="spacer"><td></td></tr>
-				<tr id="email-edit-container">
-					<th>Email</th>
-					<td>
-						<form action="" method="post" id="edit-email" data-edit-container="email-edit-container">
-							<input class="px-0" type="email" name="email" id="email" value="<?php echo $studente['email'] ?>" disabled>
-						</form>
-					</td>
-					<td>
-						<button data-edit-target="edit-email" data-edit-action="edit">Modifica</button>
-						<button data-edit-target="edit-email" data-edit-action="undo">Annulla</button>
-						<button data-edit-target="edit-email" data-edit-action="send">Invia</button>
 					</td>
 				</tr>
 				<tr class="spacer"><td></td></tr>
@@ -194,55 +158,6 @@
 						<button data-edit-target="edit-password" data-edit-action="edit">Modifica</button>
 						<button data-edit-target="edit-password" data-edit-action="undo">Annulla</button>
 						<button data-edit-target="edit-password" data-edit-action="send">Invia</button>
-					</td>
-				</tr>
-				<tr class="spacer"><td></td></tr>
-				<tr id="tel-edit-container">
-					<th>Telefono</th>
-					<td>
-						<form action="" method="post" id="edit-tel" data-edit-container="tel-edit-container">
-							<input class="px-0" type="tel" name="tel" id="tel" value="<?php echo $studente['tel'] ?>" disabled>
-						</form>
-					</td>
-					<td>
-						<button data-edit-target="edit-tel" data-edit-action="edit">Modifica</button>
-						<button data-edit-target="edit-tel" data-edit-action="undo">Annulla</button>
-						<button data-edit-target="edit-tel" data-edit-action="send">Invia</button>
-					</td>
-				</tr>
-				<tr class="spacer"><td></td></tr>
-				<tr id="indirizzo-edit-container">
-					<th>Indirizzo</th>
-					<td>
-						<form action="" method="post" id="edit-indirizzo" data-edit-container="indirizzo-edit-container">
-							<input class="px-0" type="indirizzo" name="indirizzo" id="indirizzo" value="<?php echo $studente['indirizzo'] ?>" disabled>
-						</form>
-					</td>
-					<td>
-						<button data-edit-target="edit-indirizzo" data-edit-action="edit">Modifica</button>
-						<button data-edit-target="edit-indirizzo" data-edit-action="undo">Annulla</button>
-						<button data-edit-target="edit-indirizzo" data-edit-action="send">Invia</button>
-					</td>
-				</tr>
-				<tr class="spacer"><td></td></tr>
-				<tr id="corso-edit-container">
-					<th>Corso di Laurea</th>
-					<td>
-						<form action="" method="post" id="edit-corso" data-edit-container="corso-edit-container">
-							<select name="corso" disabled>
-							<?php
-								$corsi = get_corsi();
-								print_r($corsi);
-								foreach ($corsi as $c) { ?>
-								<option value="<?php echo $c['nome'] ?>" <?php if ($c['nome'] == $studente['corso']) { echo 'selected'; } ?>><?php echo $c['nome'] . ' - ' . ucfirst($c['tipo']) ?></option>
-								<?php } ?>
-							</select>
-						</form>
-					</td>
-					<td>
-						<button data-edit-target="edit-corso" data-edit-action="edit">Modifica</button>
-						<button data-edit-target="edit-corso" data-edit-action="undo">Annulla</button>
-						<button data-edit-target="edit-corso" data-edit-action="send">Invia</button>
 					</td>
 				</tr>
 			</table>

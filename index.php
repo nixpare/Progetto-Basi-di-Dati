@@ -1,5 +1,8 @@
 <?php
+	include_once './assets/php/db.php';
+	include_once './assets/php/http.php';
 	include_once './assets/php/login.php';
+
 	session_start();
 
 	if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'HEAD') {

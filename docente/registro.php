@@ -1,22 +1,21 @@
 <?php
+	include_once '../assets/php/db.php';
+	include_once '../assets/php/http.php';
+	include_once '../assets/php/docente_registro.php';
+
 	session_start();
 
-	if (empty($_SESSION)) {
-		http_response_code(301);
-		header('Location: /index.php');
-		return;
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD' &&
-		$_SERVER['REQUEST_METHOD'] !== 'POST') {
-		http_response_code(400);
-		header('Location: /docente.php');
+	if (not_get_or_post()) {
 		return;
    	}
 
+	if (invalid_access('doc')) {
+		return;
+	}
+
 	if (!isset($_GET['data']) || !isset($_GET['insegnamento']) || !isset($_GET['corso'])) {
 		http_response_code(400);
-		header('Location: /docente.php');
+		header('Location: /appelli.php');
 		return;
 	}
 
@@ -24,25 +23,24 @@
 	$insegnamento = $_GET['insegnamento'];
 	$corso = $_GET['corso'];
 
-	include_once '../assets/php/registro.php';
-
 	if (!check_doc($insegnamento, $corso)) {
-		echo $insegnamento. '<br>' . $corso . '<br>' . $_SESSION['email'];
-		/* http_response_code(400);
-		header('Location: /logout.php'); */
+		http_response_code(400);
+		header('Location: /appelli.php');
 		return;
 	}
 
-	if (!empty($_POST)) {
-		if ($_POST['voto'] === '') {
-			$err_message = 'Inserire un voto valido';
-			goto end;
-		}
+	if (empty($_POST)) {
+		goto end;
+	}
 
-		$result = set_voto($data, $insegnamento, $corso, $_POST['matricola'], $_POST['voto']);
-		if (!$result) {
-			$err_message = "Errore nell'inserire il voto";
-		}
+	if ($_POST['voto'] === '') {
+		$err_message = 'Inserire un voto valido';
+		goto end;
+	}
+
+	$result = set_voto($data, $insegnamento, $corso, $_POST['matricola'], $_POST['voto']);
+	if (!$result) {
+		$err_message = "Errore nell'inserire il voto";
 	}
 
 	end:

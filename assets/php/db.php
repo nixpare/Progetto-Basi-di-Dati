@@ -37,9 +37,6 @@
 
 		$tuples = array();
 		while ($row = pg_fetch_array($result)) {
-			if (!filter_passed($row)) {
-				continue;
-			}
 			$tuples[] = $row;
 		}
 
