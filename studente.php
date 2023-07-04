@@ -19,13 +19,28 @@
 	}
 
 	switch (true) {
-		case isset($_POST['password']): $update_result = change_password($_POST['password']); break;
-		case isset($_POST['tel']): $update_result = change_tel($_POST['tel']); break;
-		case isset($_POST['indirizzo']): $update_result = change_indirizzo($_POST['indirizzo']); break;
+		case isset($_POST['password']):
+			$field = 'password';
+			$value = $_POST['password'];
+			break;
+		case isset($_POST['tel']):
+			$field = 'tel';
+			$value = $_POST['tel'];
+			break;
+		case isset($_POST['indirizzo']):
+			$field = 'indirizzo';
+			$value = $_POST['indirizzo'];
+			break;
 	}
 
-	if (!$update_result) {
-		$form_err_message = "Errore nell'aggiornare i dati";
+	$update_result = change_field($_SESSION['matricola'], $field, $value);
+
+	if ($update_result['result'] == 0) {
+		if ($update_result['error'] != '') {
+			$form_err_message = $update_result['error'];
+		} else {
+			$form_err_message = "Errore nell'aggiornare i dati";
+		}
 	}
 
 	end:

@@ -46,10 +46,9 @@ create or replace function check_email_unique_i_u_f()
 language plpgsql as $$
     begin
         NEW.email := trim(lower(NEW.email));
-        if (OLD IS NOT NULL) then
-            if (trim(lower(OLD.email)) = NEW.email) then
-                return NEW;
-            end if;
+
+        if (trim(lower(OLD.email)) = NEW.email) then
+            return NEW;
         end if;
 
         -- check for segretario

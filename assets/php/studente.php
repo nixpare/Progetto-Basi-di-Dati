@@ -65,57 +65,17 @@
 		return $info;
 	}
 
-	function change_password($password) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
-		$query = 'update uni.studente set password = $1 where matricola = $2';
-		$query_name = 'change_password';
-		$params = array($password, $_SESSION['matricola']);
+	function change_field($matricola, $field, $value) {
+		$query = 'update uni.studente set ' . $field .' = $1 where matricola = $2';
+		$params = array($value, $matricola);
 		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		$num_rows = pg_affected_rows($result);
-
-		if ($num_rows == 0) {
-			return false;
-		}
-		return true;
+		return db_iu('change_' . $field, $query, $params);
 	}
 
-	function change_tel($tel) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
-		$query = 'update uni.studente set tel = $1 where matricola = $2';
-		$query_name = 'change_tel';
-		$params = array($tel, $_SESSION['matricola']);
+	function get_studente($matricola) {
+		$query = 'select * from uni.studente where matricola = $1';
+		$params = array($matricola);
 		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		$num_rows = pg_affected_rows($result);
-
-		if ($num_rows == 0) {
-			return false;
-		}
-		return true;
-	}
-
-	function change_indirizzo($indirizzo) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
-		$query = 'update uni.studente set indirizzo = $1 where matricola = $2';
-		$query_name = 'change_indirizzo';
-		$params = array($indirizzo, $_SESSION['matricola']);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		$num_rows = pg_affected_rows($result);
-
-		if ($num_rows == 0) {
-			return false;
-		}
-		return true;
+		return db_single_select('get_studente', $query, $params);
 	}
 ?>
