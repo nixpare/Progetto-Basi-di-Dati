@@ -14,7 +14,7 @@
 	}
 
 	function get_informazioni_corso($nome_corso) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'select * from uni.corso_laurea where lower(nome) = trim(lower($1))';
 		$query_name = 'get_corso';

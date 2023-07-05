@@ -1,6 +1,6 @@
 <?php
 	function check_doc($insegnamento, $corso) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'select * from uni.insegnamento
 				  where codice = $1 and corso = $2 and responsabile = $3';
@@ -12,6 +12,8 @@
 
 		$num_rows = pg_num_rows($result);
 
+		pg_close($db);
+
 		if ($num_rows == 0) {
 			return false;
 		}
@@ -19,7 +21,7 @@
 	}
 
 	function get_iscritti($data, $insegnamento, $corso) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'select studente.matricola, studente.nome, studente.cognome, sostiene.voto from
 					uni.studente
@@ -38,11 +40,12 @@
 			$iscritti[] = $row;
 		}
 
+		pg_close($db);
 		return $iscritti;
 	}
 
 	function set_voto($data, $insegnamento, $corso, $matricola, $voto) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'update uni.sostiene set voto = $5
 					where studente = $1 and data = $2 and insegnamento = $3 and corso = $4';
@@ -53,6 +56,8 @@
 		$result = pg_execute($db, $query_name, $params);
 
 		$num_rows = pg_affected_rows($result);
+
+		pg_close($db);
 
 		if ($num_rows == 0) {
 			return false;

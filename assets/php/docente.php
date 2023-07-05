@@ -1,6 +1,6 @@
 <?php
 	function get_insegnamenti() {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'select * from uni.insegnamento
 					where responsabile = $1
@@ -18,6 +18,7 @@
 		}
 
 		$_SESSION['insegnamenti'] = $insegnamenti;
+		pg_close($db);
 		return $insegnamenti;
 	}
 

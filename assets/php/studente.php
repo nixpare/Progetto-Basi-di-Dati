@@ -12,7 +12,7 @@
 	function get_info_corso($corso) {
 		$info = array();
 
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
+		$db = db_connect();
 
 		$query = 'select tipo from uni.corso_laurea
 					where nome = $1';
