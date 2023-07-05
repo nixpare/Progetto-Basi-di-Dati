@@ -48,31 +48,53 @@
 			}
 
 			$update_result = change_field($_GET['codice'], $_GET['corso'], $field, $value);
+			if ($update_result['result'] == 0) {
+				if ($update_result['error'] != '') {
+					$form_err_message = $update_result['error'];
+				} else {
+					$form_err_message = "Errore nell'aggiornare i dati";
+				}
+			}
+
 			break;
 		case 'add-prop':
-			return;
+			if (!isset($_POST['codice'])) {
+				http_response_code(400);
+				$add_err_message = 'Richiesta non valida';
+				goto end;
+			}
+
+			$add_result = add_propedeuticità($_GET['codice'], $_GET['corso'], $_POST['codice']);
+			if ($add_result['result'] == 0) {
+				if ($add_result['error'] != '') {
+					$add_err_message = $add_result['error'];
+				} else {
+					$add_err_message = "Errore nell'aggiornare i dati";
+				}
+			}
+
 			break;
 		case 'remove-prop':
-			return;
+			if (!isset($_POST['codice'])) {
+				http_response_code(400);
+				$remove_err_message = 'Richiesta non valida';
+				goto end;
+			}
+
+			$remove_result = remove_propedeuticità($_GET['codice'], $_GET['corso'], $_POST['codice']);
+			if ($remove_result['result'] == 0) {
+				if ($remove_result['error'] != '') {
+					$remove_err_message = $remove_result['error'];
+				} else {
+					$remove_err_message = "Errore nell'aggiornare i dati";
+				}
+			}
+
 			break;
 		default:
 			http_response_code(400);
 			$form_err_message = 'Richiesta non valida';
 			goto end;
-	}
-
-	if ($update_result['result'] == 0) {
-		if ($update_result['error'] != '') {
-			$form_err_message = $update_result['error'];
-		} else {
-			$form_err_message = "Errore nell'aggiornare i dati";
-		}
-	} else {
-		if (isset($_POST['nome']) && $_POST['nome'] != $_GET['corso']) {
-			http_response_code(301);
-			header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?corso=' . $_POST['nome']);
-			return;
-		}
 	}
 
 	end:
@@ -215,6 +237,81 @@
 					</td>
 				</tr>
 			</table>
+		</div>
+
+		<h4>Propedeuticità</h4>
+		<div>
+			<?php if (isset($remove_err_message)) { ?>
+				<div class="alert alert-danger" role="alert">
+					<?php echo $remove_err_message ?>
+				</div>
+			<?php } ?>
+			<table class="my-3">
+				<thead>
+					<tr>
+						<th>Codice</th>
+						<th>Nome</th>
+						<th>Anno</th>
+						<th></th>
+					</tr>
+					<tr class="spacer"><th></th></tr>
+				</thead>
+				<tbody>
+					<?php $prop = get_propedeuticità($_GET['codice'], $_GET['corso']);
+					if (count($prop) == 0) { ?>
+						<td> --- </td>
+						<td> --- </td>
+						<td> --- </td>
+						<td></td>
+					<?php } else {
+						foreach ($prop as $ins) { ?>
+						<tr>
+							<td><?php echo $ins['codice'] ?></td>
+							<td><?php echo $ins['nome'] ?></td>
+							<td><?php echo $ins['anno'] ?></td>
+							<td>
+								<form action="" method="post">
+									<input type="hidden" name="codice" value="<?php echo $ins['codice'] ?>">
+									<input type="hidden" name="action" value="remove-prop">
+									<button type="submit">Rimuovi</button>
+								</form>
+							</td>
+						</tr>
+						<?php }
+					} ?>
+				</tbody>
+			</table>
+		</div>
+
+		<h4>Aggiungi propedeuticità</h4>
+		<div>
+			<?php if (isset($add_err_message)) { ?>
+				<div class="alert alert-danger" role="alert">
+					<?php echo $add_err_message ?>
+				</div>
+			<?php } ?>
+			<form action="" method="post">
+				<table class="my-3">
+					<tr class="spacer"><td></td></tr>
+					<tr>
+						<th>Insegnamento</th>
+						<td><select name="codice">
+							<?php $props = get_suitable_props(
+								$insegnamento['codice'],
+								$insegnamento['corso'],
+								$insegnamento['anno']
+							); foreach ($props as $prop) { ?>
+								<option value="<?php echo $prop['codice'] ?>">
+									<?php echo $prop['nome'] . ' (' . $prop['codice'] . ')' ?>
+								</option>
+							<?php } ?>
+						</td>
+						<td class="no-delim"></td>
+					</tr>
+				</table>
+				<input type="hidden" name="action" value="add-prop">
+				<button type="submit">Crea</button>
+			</form>
 		</div>
 
 		<?php } ?>

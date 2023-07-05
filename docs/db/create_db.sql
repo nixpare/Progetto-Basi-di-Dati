@@ -187,6 +187,42 @@ create table propedeuticità (
                                                             on update cascade on delete cascade
 );
 
+create or replace function check_corretta_propedeuticità_i_u_f()
+    returns trigger
+language plpgsql as $$
+    begin
+        if NEW.corso_insegnamento <> NEW.corso_propedeutico then
+            raise 'La propedeuticità deve esitere nello stesso corso';
+        end if;
+
+        if NEW.codice_insegnamento = NEW.codice_propedeutico then
+            raise 'Un esame non può essere propedeutico con se stesso';
+        end if;
+
+        perform * from uni.propedeuticità
+        where codice_insegnamento = NEW.codice_propedeutico and NEW.codice_insegnamento = codice_propedeutico;
+
+        if FOUND then
+            raise 'Propedeuticità ciclica: % è già propedeutico per %', NEW.codice_insegnamento, NEW.codice_propedeutico;
+        end if;
+
+        perform * from uni.insegnamento ins1, uni.insegnamento ins2
+        where ins1.codice = NEW.codice_insegnamento and ins1.corso = NEW.corso_insegnamento and
+                ins2.codice = NEW.codice_propedeutico and ins2.corso = NEW.corso_propedeutico and
+                ins1.anno > ins2.anno;
+        
+        if FOUND then
+            raise 'Un insegnamento non può essere propedeutico per uno di un anno precedente';
+        end if;
+
+        return NEW;
+    end;
+$$;
+
+create or replace trigger check_corretta_propedeuticità_i_u_t
+    before insert or update on uni.propedeuticità
+    for each row execute function check_corretta_propedeuticità_i_u_f();
+
 create table appello (
     data date,
     insegnamento varchar(10),
@@ -258,6 +294,46 @@ $$;
 create or replace trigger check_studente_corso_appello_i_u_t
     before insert or update on uni.sostiene
     for each row execute function check_studente_corso_appello_i_u_f();
+
+create or replace function check_sostiene_propedeuticità_i_u_f()
+    returns trigger
+language plpgsql as $$
+    declare
+        prop_codice uni.insegnamento.codice%type;
+        prop_corso uni.insegnamento.corso%type := NEW.corso;
+        voto uni.sostiene.voto%type;
+    begin
+        for prop_codice in
+            select propedeuticità.codice_propedeutico from uni.propedeuticità
+            where propedeuticità.codice_insegnamento = NEW.insegnamento and
+                propedeuticità.corso_insegnamento = NEW.corso
+        loop
+            select sostiene.voto into voto from uni.sostiene
+            where sostiene.insegnamento = prop_codice and
+                sostiene.corso = prop_corso
+            order by sostiene.data desc
+            limit 1;
+
+            if not FOUND then
+                raise 'Propedeuticità non rispettata: mai sostenuto esame per %', prop_codice;
+            end if;
+
+            if voto is NULL then
+                raise 'Propedeuticità non rispettata: iscritto a un esame di % senza voto', prop_codice;
+            end if;
+
+            if voto < 18 then
+                raise 'Propedeuticità non rispettata: ultimo voto per esame di % insufficiente', prop_codice;
+            end if;
+        end loop;
+
+        return NEW;
+    end;
+$$;
+
+create or replace trigger check_sostiene_propedeuticità_i_u_t
+    before insert or update on uni.sostiene
+    for each row execute function check_sostiene_propedeuticità_i_u_f();
 
 create or replace function get_carriera_completa(matricola uni.studente.matricola%type)
     returns table (
