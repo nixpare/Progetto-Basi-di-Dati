@@ -209,7 +209,7 @@ language plpgsql as $$
         perform * from uni.insegnamento ins1, uni.insegnamento ins2
         where ins1.codice = NEW.codice_insegnamento and ins1.corso = NEW.corso_insegnamento and
                 ins2.codice = NEW.codice_propedeutico and ins2.corso = NEW.corso_propedeutico and
-                ins1.anno > ins2.anno;
+                ins1.anno < ins2.anno;
         
         if FOUND then
             raise 'Un insegnamento non può essere propedeutico per uno di un anno precedente';
