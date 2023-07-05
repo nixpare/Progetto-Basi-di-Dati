@@ -32,6 +32,10 @@
 			$field = 'nome';
 			$value = $_POST['nome'];
 			break;
+		case isset($_POST['email']):
+			$field = 'email';
+			$value = $_POST['email'];
+			break;
 		case isset($_POST['password']):
 			$field = 'password';
 			$value = $_POST['password'];
@@ -42,13 +46,19 @@
 			goto end;
 	}
 
-	$update_result = change_field($_GET['email'], $field, $value);
+	$update_result = change_field($_GET['doc'], $field, $value);
 
 	if ($update_result['result'] == 0) {
 		if ($update_result['error'] != '') {
 			$form_err_message = $update_result['error'];
 		} else {
 			$form_err_message = "Errore nell'aggiornare i dati";
+		}
+	} else {
+		if (isset($_POST['email'])) {
+			http_response_code(301);
+			header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?doc=' . $_POST['email']);
+			return;
 		}
 	}
 
@@ -141,6 +151,20 @@
 						<button data-edit-target="edit-nome" data-edit-action="edit">Modifica</button>
 						<button data-edit-target="edit-nome" data-edit-action="undo">Annulla</button>
 						<button data-edit-target="edit-nome" data-edit-action="send">Invia</button>
+					</td>
+				</tr>
+				<tr class="spacer"><td></td></tr>
+				<tr id="email-edit-container">
+					<th>Email</th>
+					<td>
+						<form action="" method="post" id="edit-email" data-edit-container="email-edit-container">
+							<input class="px-0" type="email" name="email" id="email" value="<?php echo $docente['email'] ?>" disabled>
+						</form>
+					</td>
+					<td>
+						<button data-edit-target="edit-email" data-edit-action="edit">Modifica</button>
+						<button data-edit-target="edit-email" data-edit-action="undo">Annulla</button>
+						<button data-edit-target="edit-email" data-edit-action="send">Invia</button>
 					</td>
 				</tr>
 				<tr class="spacer"><td></td></tr>

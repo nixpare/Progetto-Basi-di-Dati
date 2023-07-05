@@ -99,6 +99,7 @@
 			<a class="btn" href="/segreteria/studenti.php">Studenti</a>
 			<a class="btn" href="/segreteria/docenti.php">Docenti</a>
 			<a class="btn" href="/segreteria/corsi.php">Corsi di Laurea</a>
+			<a class="btn" href="/segreteria/insegnamenti.php">Insegnamenti</a>
 		</div>
 	</div>
 

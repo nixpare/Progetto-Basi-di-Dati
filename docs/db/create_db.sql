@@ -89,8 +89,6 @@ create or replace trigger check_email_unique_i_u_t
     before insert or update on uni.studente
     for each row execute function check_email_unique_i_u_f();
 
---- create funzione e trigger che controllino che il corso di studente abbia almeno un insegnamento
-
 create or replace function studente_corso_laurea_i_u_f () 
 	returns trigger
 language plpgsql as $$
@@ -107,8 +105,13 @@ language plpgsql as $$
 $$;
 
 create or replace trigger studente_corso_laurea_i_u_t
-    before insert or update on uni.studente
+    after insert or update on uni.studente
     for each row execute function studente_corso_laurea_i_u_f();
+-- questo è un after trigger per consentire l'aggiornamento del nome
+-- del corso di laurea permettendo quindi la modifica in cascaca dei relativi
+-- insegnamenti associati, quindi poi viene effettuato il controllo.
+-- Altrimenti se fosse un before trigger, ovviamente, non ci sarebbe nessun
+-- insegnamento associato al corso col nuovo nome e quindi l'operazione fallirebbe
 
 create table insegnamento (
     codice varchar(10),
@@ -151,6 +154,10 @@ language plpgsql as $$
         n int := 0;
         doc uni.docente%rowtype;
     begin
+        if (OLD.responsabile = NEW.responsabile) then
+            return NEW;
+        end if;
+
         select count(*) into n
         from uni.insegnamento
         where responsabile = NEW.responsabile;
