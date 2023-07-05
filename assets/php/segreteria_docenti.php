@@ -32,4 +32,9 @@
 
 		return db_iu('create_docente', $query, $params);
 	}
+
+	function delete_docente($email) {
+		$query = 'delete from uni.docente where email = $1';
+		return db_iu('create_docente', $query, array($email));
+	}
 ?>

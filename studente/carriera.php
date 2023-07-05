@@ -38,7 +38,7 @@
 	<link rel="stylesheet" href="/assets/css/utente.css">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
 	<script src="/assets/js/collapse.js" defer></script>
-	<script src="/assets/js/carriera.js" defer></script>
+	<script src="/assets/js/delete.js" defer></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body class="stud">
@@ -56,7 +56,7 @@
 	</div>
 
 	<?php
-		$carriera = get_carriera_completa();
+		$carriera = get_carriera_completa($_SESSION['matricola']);
 		$carriera_valida = array();
 		foreach ($carriera as $risultato) {
 			$carriera_valida[$risultato['insegnamento']] = $risultato;
@@ -163,7 +163,7 @@
 			<div class="alert alert-warning">
 				<p class="m-0">ATTENZIONE! L'operazione non è reversibile, una volta confermata verrà loggato fuori.</p>
 			</div>
-			<form action="" method="post" id="rinunciaForm">
+			<form action="" method="post" id="deleteForm">
 				<button class="warning">Rinuncio</button>
 				<input class="d-none" type="checkbox" name="rinuncia">
 				<button class="d-none">Annulla</button>
