@@ -78,4 +78,9 @@
 		
 		return db_single_select('get_studente', $query, $params);
 	}
+
+	function delete_studente($matricola) {
+		$query = 'delete from uni.studente where matricola = $1';
+		return db_iu('delete_studente', $query, array($matricola));
+	}
 ?>

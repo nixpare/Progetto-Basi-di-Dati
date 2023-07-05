@@ -118,6 +118,42 @@
 	</div>
 
 	<div class="container mt-5">
+		<h4 class="highlight">Studenti rimossi</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Matricola</th>
+					<th>Cognome</th>
+					<th>Nome</th>
+					<th>Email</th>
+					<th></th>
+				</tr>
+				<tr class="spacer"><th></th></tr>
+			</thead>
+			<tbody>
+				<?php
+					$studenti_rimossi = get_studenti_rimossi();
+					if (empty($studenti_rimossi)) {
+						echo '<td> --- </td>';
+						echo '<td> --- </td>';
+						echo '<td> --- </td>';
+						echo '<td> --- </td>';
+						echo '<td></td>';
+					} else {
+						foreach ($studenti_rimossi as $stud) { ?>
+				<tr>
+					<td><?php echo $stud['matricola'] ?></td>
+					<td><?php echo $stud['cognome'] ?></td>
+					<td><?php echo $stud['nome'] ?></td>
+					<td><?php echo $stud['email'] ?></td>
+					<td><a class="btn" href="<?php echo '/segreteria/studenti/gestisci-rimossi.php?matricola=' . $stud['matricola'] ?>">Gestisci</a></td>
+				</tr>
+				<?php } } ?>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container mt-5">
 		<?php if (isset($err_message)) { ?>
 			<div class="my-3 alert alert-danger">
 				<?php echo $err_message ?>

@@ -53,6 +53,19 @@
 			$field = 'corso';
 			$value = $_POST['corso'];
 			break;
+		case isset($_POST['delete-stud']):
+			$delete_result = delete_studente($_GET['matricola']);
+			if ($delete_result['result'] == 0) {
+				if ($delete_result['error'] != '') {
+					$delete_err_message = $delete_result['error'];
+				} else {
+					$delete_err_message = "Errore nel rimuovere lo studente";
+				}
+			} else {
+				http_response_code(301);
+				header('Location: /segreteria/studenti.php');
+				return;
+			}
 		default:
 			http_response_code(400);
 			$form_err_message = 'Richiesta non valida';
@@ -354,14 +367,20 @@
 	</div>
 
 	<div class="container my-5">
-		<h4 class="mb-3 highlight-warning">Rimozione studente</h4>
+		<?php if (isset($delete_err_message)) { ?>
+			<div class="alert alert-danger" role="alert">
+				<?php echo $delete_err_message ?>
+			</div>
+		<?php } ?>
+
+		<h4 class="mb-3 highlight-warning">Rimozione account studente</h4>
 		<div class="ms-3">
 			<div class="alert alert-warning">
 				<p class="m-0">ATTENZIONE! L'operazione non è reversibile</p>
 			</div>
 			<form action="" method="post" id="deleteForm">
 				<button class="warning">Rimuovi</button>
-				<input class="d-none" type="checkbox" name="rinuncia">
+				<input type="hidden" name="delete-stud">
 				<button class="d-none">Annulla</button>
 				<button class="d-none warning" type="submit">Conferma Scelta</button>
 			</form>

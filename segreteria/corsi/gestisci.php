@@ -63,6 +63,19 @@
 			}
 
 			break;
+		case 'delete-corso':
+			$delete_result = delete_corso($_GET['corso']);
+			if ($delete_result['result'] == 0) {
+				if ($delete_result['error'] != '') {
+					$delete_err_message = $delete_result['error'];
+				} else {
+					$delete_err_message = "Errore nell'aggiornare i dati";
+				}
+			} else {
+				http_response_code(301);
+				header('Location: /segreteria/corsi.php');
+				return;
+			}
 		default:
 			http_response_code(400);
 			$info_err_message = 'Richiesta non valida';
@@ -86,6 +99,7 @@
 	<script src="/assets/js/collapse.js" defer></script>
 	<script src="/assets/js/password-eye.js" defer></script>
 	<script src="/assets/js/edit.js" defer></script>
+	<script src="/assets/js/delete.js" defer></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body class="stud">
@@ -188,9 +202,30 @@
 				</tbody>
 			</table>
 		</div>
-
-		<?php } ?>
 	</div>
+
+	<div class="container my-5">
+		<?php if (isset($delete_err_message)) { ?>
+			<div class="alert alert-danger" role="alert">
+				<?php echo $delete_err_message ?>
+			</div>
+		<?php } ?>
+
+		<h4 class="mb-3 highlight-warning">Rimozione corso di laurea</h4>
+		<div class="ms-3">
+			<div class="alert alert-warning">
+				<p class="m-0">ATTENZIONE! L'operazione non è reversibile</p>
+			</div>
+			<form action="" method="post" id="deleteForm">
+				<button class="warning">Rimuovi</button>
+				<input type="hidden" name="action" value="delete-corso">
+				<button class="d-none">Annulla</button>
+				<button class="d-none warning" type="submit">Conferma Scelta</button>
+			</form>
+		</div>
+	</div>
+
+	<?php } ?>
 
 	<footer>
 		<p>Designed by <a href="https://nixpare.com/">NixPare</a></p>

@@ -263,7 +263,7 @@ create or replace trigger check_appelli_anno_i_u_t
     for each row execute function check_appelli_anno_i_u_f();
 
 create table sostiene (
-    studente char(6),
+    studente char(6) references studente(matricola) on update cascade,
     data date,
     insegnamento varchar(10),
     corso varchar(50),
@@ -335,7 +335,7 @@ create or replace trigger check_sostiene_propedeuticità_i_u_t
     before insert or update on uni.sostiene
     for each row execute function check_sostiene_propedeuticità_i_u_f();
 
-create or replace function get_carriera_completa(matricola uni.studente.matricola%type)
+create or replace function get_carriera_completa(matr uni.studente.matricola%type)
     returns table (
         data uni.sostiene.data%type,
         insegnamento uni.sostiene.insegnamento%type,
@@ -355,11 +355,50 @@ language plpgsql as $$
                 uni.appello on sostiene.data = appello.data and sostiene.insegnamento = appello.insegnamento and sostiene.corso = appello.corso
                 join
                 uni.insegnamento on sostiene.insegnamento = insegnamento.codice and sostiene.corso = insegnamento.corso
-            where sostiene.voto is not null
+            where studente.matricola = matr and sostiene.voto is not null
             order by insegnamento.anno, insegnamento.nome, sostiene.data
         );
     end;
 $$;
+
+create table studente_rimosso (
+    matricola char(6) primary key,
+    email email not null unique,
+    nome varchar(20) not null,
+    cognome varchar(20) not null
+);
+
+create table carriera_rimossa (
+    studente char(6) references studente_rimosso(matricola) on update cascade,
+    data date,
+    insegnamento varchar(10),
+    corso varchar(50),
+    voto int not null check ( voto >= 0 and voto <= 30 ),
+    primary key (studente, data, insegnamento, corso)
+);
+
+create or replace function remove_studente_d_f()
+    returns trigger
+language plpgsql as $$
+    declare
+        risultato uni.sostiene%rowtype;
+    begin
+        insert into uni.studente_rimosso values (OLD.matricola, OLD.email, OLD.nome, OLD.cognome);
+
+        for risultato in
+            select * from uni.sostiene
+            where sostiene.studente = OLD.matricola and voto is not null
+        loop
+            insert into uni.carriera_rimossa values (OLD.matricola, risultato.data, risultato.insegnamento, risultato.corso, risultato.voto);
+        end loop;
+
+        return OLD;
+    end;
+$$;
+
+create or replace trigger remove_studente_d_t
+    before delete on uni.studente
+    for each row execute function remove_studente_d_f();
 
 -- inseriti per il test
 insert into uni.corso_laurea values

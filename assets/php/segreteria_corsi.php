@@ -58,4 +58,9 @@
 		
 		return db_iu('delete_insegnamento', $query, $params);
 	}
+
+	function delete_corso($nome) {
+		$query = 'delete from uni.corso_laurea where nome = $1';
+		return db_iu('delete_corso', $query, array($nome));
+	}
 ?>

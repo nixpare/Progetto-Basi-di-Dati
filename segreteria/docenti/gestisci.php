@@ -46,7 +46,7 @@
 				if ($delete_result['error'] != '') {
 					$delete_err_message = $delete_result['error'];
 				} else {
-					$delete_err_message = "Errore nell'aggiornare i dati";
+					$delete_err_message = "Errore nel rimuovere il docente";
 				}
 			} else {
 				http_response_code(301);
