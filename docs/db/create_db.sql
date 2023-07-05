@@ -269,7 +269,7 @@ create table sostiene (
     corso varchar(50),
     voto int check ( voto is null or (voto >= 0 and voto <= 30) ),
     primary key (studente, data, insegnamento, corso),
-    foreign key (data, insegnamento, corso) references appello on update cascade
+    foreign key (data, insegnamento, corso) references appello on update cascade on delete cascade
 );
 
 -- creo una funzione e un trigger che controlli che uno studente

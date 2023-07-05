@@ -1,16 +1,8 @@
 <?php
 	function init_studente() {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
 		$query = 'select tel, indirizzo, corso from uni.studente
 					where matricola = $1';
-		$query_name = 'init_studente';
-		$params = array($_SESSION['matricola']);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		$result = pg_fetch_assoc($result);
+		$result = db_single_select('init_studente', $query, array($_SESSION['matricola']))['result'];
 
 		$_SESSION['tel'] = $result['tel'];
 		$_SESSION['indirizzo'] = $result['indirizzo'];
@@ -62,6 +54,7 @@
 			$info['insegnamenti'][$row['codice']] = $ins;
 		}
 
+		pg_close($db);
 		return $info;
 	}
 
@@ -77,10 +70,5 @@
 		$params = array($matricola);
 		
 		return db_single_select('get_studente', $query, $params);
-	}
-
-	function delete_studente($matricola) {
-		$query = 'delete from uni.studente where matricola = $1';
-		return db_iu('delete_studente', $query, array($matricola));
 	}
 ?>

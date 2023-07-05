@@ -17,10 +17,19 @@
 		goto end;
 	}
 
-	if (isset($_POST['rinuncia'])) {
-		http_response_code(301);
-		header('Location: /logout.php');
-		return;
+	if (isset($_POST['delete-stud'])) {
+		$delete_result = delete_studente($_SESSION['matricola']);
+		if ($delete_result['result'] == 0) {
+			if ($delete_result['error'] != '') {
+				$delete_err_message = $delete_result['error'];
+			} else {
+				$delete_err_message = "Errore nel rimuovere lo studente";
+			}
+		} else {
+			http_response_code(301);
+			header('Location: /logout.php');
+			return;
+		}
 	}
 
 	end:
@@ -158,14 +167,20 @@
 	</div>
 
 	<div class="container my-5">
+		<?php if (isset($delete_err_message)) { ?>
+			<div class="alert alert-danger" role="alert">
+				<?php echo $delete_err_message ?>
+			</div>
+		<?php } ?>
+
 		<h4 class="mb-3 highlight-warning">Rinuncia agli studi</h4>
 		<div class="ms-3">
 			<div class="alert alert-warning">
-				<p class="m-0">ATTENZIONE! L'operazione non è reversibile, una volta confermata verrà loggato fuori.</p>
+				<p class="m-0">ATTENZIONE! L'operazione non è reversibile, una volta confermata verrà loggato fuori</p>
 			</div>
 			<form action="" method="post" id="deleteForm">
 				<button class="warning">Rinuncio</button>
-				<input class="d-none" type="checkbox" name="rinuncia">
+				<input type="hidden" name="delete-stud">
 				<button class="d-none">Annulla</button>
 				<button class="d-none warning" type="submit">Conferma Scelta</button>
 			</form>

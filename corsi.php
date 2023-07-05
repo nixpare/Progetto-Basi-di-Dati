@@ -1,4 +1,5 @@
 <?php
+	include_once './assets/php/db.php';
 	include_once './assets/php/corsi.php';
 
 	if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'HEAD') {

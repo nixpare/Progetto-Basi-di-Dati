@@ -1,22 +1,14 @@
 <?php
 	function get_corsi() {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
 		$query = 'select * from uni.corso_laurea order by tipo desc';
-		$query_name = 'get_insegnamenti';
-		$params = array();
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
+		$corsi = db_multi_select('get_corsi', $query, array())['result'];
 
-		if (!$result) {
+		if (!$corsi) {
 			return false;
 		}
 
-		$corsi = array();
-		while ($row = pg_fetch_array($result)) {
-			$row['info_link'] = '/corsi.php?corso=' . $row['nome'];
-			$corsi[] = $row;
+		for ($i = 0; $i < count($corsi); $i++) {
+			$corsi[$i]['info_link'] = '/corsi.php?corso=' . $corsi[$i]['nome'];
 		}
 		return $corsi;
 	}
@@ -34,6 +26,7 @@
 		$result = pg_fetch_assoc($result);
 
 		if (!$result) {
+			pg_close($db);
 			return false;
 		}
 
@@ -53,20 +46,15 @@
 			$row['nome_responsabile'] = get_nome_docente($row['responsabile']);
 			$corso['insegnamenti'][] = $row;
 		}
+		
+		pg_close($db);
 		return $corso;
 	}
 
 	function get_nome_docente($email) {
-		$db = pg_connect('host=localhost user=bdlab password=bdlab dbname=project');
-
 		$query = 'select * from uni.docente where email = $1';
-		$query_name = 'get_nome_docente';
-		$params = array($email);
-		
-		$result = pg_prepare($db, $query_name, $query);
-		$result = pg_execute($db, $query_name, $params);
-
-		$result = pg_fetch_assoc($result);
+		$query_name = 'get_nome_docente_' . $email;
+		$result = db_single_select($query_name, $query, array($email))['result'];
 
 		return $result['nome'] . ' ' . $result['cognome'];
 	}
