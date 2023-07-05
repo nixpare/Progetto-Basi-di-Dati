@@ -26,33 +26,47 @@
 		case 'edit-info':
 			if (!isset($_POST['nome'])) {
 				http_response_code(400);
-				$form_err_message = 'Richiesta non valida';
+				$info_err_message = 'Richiesta non valida';
 				goto end;
 			}
 
 			$update_result = change_nome($_GET['corso'], $_POST['nome']);
+			if ($update_result['result'] == 0) {
+				if ($update_result['error'] != '') {
+					$info_err_message = $update_result['error'];
+				} else {
+					$info_err_message = "Errore nell'aggiornare i dati";
+				}
+			} else {
+				if (isset($_POST['nome']) && $_POST['nome'] != $_GET['corso']) {
+					http_response_code(301);
+					header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?corso=' . $_POST['nome']);
+					return;
+				}
+			}
+
 			break;
-		case 'edit-ins':
-			return;
+		case 'delete-ins':
+			if (!isset($_POST['codice'])) {
+				http_response_code(400);
+				$info_err_message = 'Richiesta non valida';
+				goto end;
+			}
+
+			$update_result = delete_insegnamento($_POST['codice'], $_GET['corso']);
+			if ($update_result['result'] == 0) {
+				if ($update_result['error'] != '') {
+					$delete_ins_message = $update_result['error'];
+				} else {
+					$delete_ins_message = "Errore nel rimuovere l'insegnamento";
+				}
+			}
+
 			break;
 		default:
 			http_response_code(400);
-			$form_err_message = 'Richiesta non valida';
+			$info_err_message = 'Richiesta non valida';
 			goto end;
-	}
-
-	if ($update_result['result'] == 0) {
-		if ($update_result['error'] != '') {
-			$form_err_message = $update_result['error'];
-		} else {
-			$form_err_message = "Errore nell'aggiornare i dati";
-		}
-	} else {
-		if (isset($_POST['nome']) && $_POST['nome'] != $_GET['corso']) {
-			http_response_code(301);
-			header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?corso=' . $_POST['nome']);
-			return;
-		}
 	}
 
 	end:
@@ -108,13 +122,13 @@
 			<div class="alert alert-danger" role="alert">
 				<?php echo $corso_error ?>
 			</div>
-		<?php } else { ?>
+		<?php } ?>
 		
 		<h4>Corso - <?php echo $corso['nome'] . ' (' . ucfirst($corso['tipo']) . ')' ?></h4>
 		<div>
-			<?php if (isset($form_err_message)) { ?>
+			<?php if (isset($info_err_message)) { ?>
 				<div class="alert alert-danger" role="alert">
-					<?php echo $form_err_message ?>
+					<?php echo $info_err_message ?>
 				</div>
 			<?php } ?>
 			<table class="my-3">
@@ -133,6 +147,45 @@
 						<button data-edit-target="edit-nome" data-edit-action="send">Invia</button>
 					</td>
 				</tr>
+			</table>
+		</div>
+
+		<h4>Insegnamenti</h4>
+		<?php if (isset($delete_ins_message)) { ?>
+			<div class="alert alert-danger" role="alert">
+				<?php echo $delete_ins_message ?>
+			</div>
+		<?php } else { ?>
+		<div>
+			<table class="my-3">
+				<thead>
+					<tr>
+						<th>Codice</th>
+						<th>Nome</th>
+						<th>Anno</th>
+						<th>Responsabile</th>
+						<th></th>
+					</tr>
+					<tr class="spacer"><th></th></tr>
+				</thead>
+				<tbody>
+					<?php $insegnamenti = get_insegnamenti($_GET['corso']);
+					foreach ($insegnamenti as $ins) { ?>
+						<tr>
+							<td><?php echo $ins['codice'] ?></td>
+							<td><?php echo $ins['nome'] ?></td>
+							<td><?php echo $ins['anno'] ?></td>
+							<td><?php echo $ins['responsabile'] ?></td>
+							<td>
+								<form action="" method="post">
+									<input type="hidden" name="action" value="delete-ins">
+									<input type="hidden" name="codice" value="<?php echo $ins['codice'] ?>">
+									<button type="submit">Rimuovi</button>
+								</form>
+							</td>
+						</tr>
+					<?php } ?>
+				</tbody>
 			</table>
 		</div>
 

@@ -44,4 +44,18 @@
 		
 		return db_iu('change_nome', $query, $params);
 	}
+
+	function get_insegnamenti($corso) {
+		$query = 'select * from uni.insegnamento
+				where insegnamento.corso = $1
+				order by insegnamento.anno, insegnamento.codice, insegnamento.nome';
+		return db_multi_select('get_insegnamenti', $query, array($corso))['result'];
+	}
+
+	function delete_insegnamento($codice, $corso) {
+		$query = 'delete from uni.insegnamento where codice = $1 and corso = $2';
+		$params = array($codice, $corso);
+		
+		return db_iu('delete_insegnamento', $query, $params);
+	}
 ?>

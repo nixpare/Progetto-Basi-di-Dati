@@ -61,15 +61,15 @@
 		return db_iu('create_insegnamento', $query, $params);
 	}
 
-	function get_corso($nome) {
-		$query = 'select * from uni.corso_laurea where nome = $1';
-		return db_single_select('get_corso', $query, array($nome));
+	function change_field($codice, $corso, $field, $value) {
+		$query = 'update uni.insegnamento set ' . $field .' = $1 where codice = $2 and corso = $3';
+		$params = array($value, $codice, $corso);
+		
+		return db_iu('change_' . $field, $query, $params);
 	}
 
-	function change_nome($corso, $nome) {
-		$query = 'update uni.corso_laurea set nome = $1 where nome = $2';
-		$params = array($nome, $corso);
-		
-		return db_iu('change_nome', $query, $params);
+	function get_insegnamento($codice, $corso) {
+		$query = 'select * from uni.insegnamento where codice = $1 and corso = $2';
+		return db_single_select('get_insegnamento', $query, array($codice, $corso));
 	}
 ?>
